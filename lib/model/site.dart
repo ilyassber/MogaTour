@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:alpha_task/model/category.dart';
-import 'package:alpha_task/model/image.dart';
+import 'package:alpha_task/model/picture.dart';
 
 class Site {
   Map<String, dynamic> map;
@@ -34,7 +34,7 @@ class Site {
   int prix = 0;
   int nbrClicks;
   int nbrVisitsGps;
-  List<Image> images;
+  List<Picture> images;
   List<Category> categories;
   double lat;
   double lng;
@@ -114,7 +114,7 @@ class Site {
       prix: map["prix"],
       nbrClicks: map["nbr_clicks"],
       nbrVisitsGps: map["nbr_visits_gps"],
-      images: List<Image>.from(map["images"].map((x) => Image.fromJson(x))),
+      images: List<Picture>.from(map["images"].map((x) => Picture.fromJson(x))),
       categories: List<Category>.from(
           map["categories"].map((x) => Category.fromJson(x))),
       // videos: List<dynamic>.from(json["videos"].map((x) => x)),
@@ -145,7 +145,7 @@ class Site {
         prix: json["prix"],
         nbrClicks: json["nbr_clicks"],
         nbrVisitsGps: json["nbr_visits_gps"],
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images: List<Picture>.from(json["images"].map((x) => Picture.fromJson(x))),
         categories: List<Category>.from(
             json["categories"].map((x) => Category.fromJson(x))),
         // videos: List<dynamic>.from(json["videos"].map((x) => x)),

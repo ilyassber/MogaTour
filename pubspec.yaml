@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -55,7 +55,25 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/strings/
+    - assets/font/
+    - assets/icons/
+    - assets/images/
+    - assets/images/useful_info/
+    - assets/images/feedback/
+    - assets/images/page_welcome/
+    - assets/images/page_home/
+    - assets/images/story/
+    - assets/images/sites/
+    - assets/images/flags/
+    - assets/images/events/
+    - assets/images/activities/
+    - assets/images/circuit_categories/
+    - assets/images/more/
+    - assets/markers/
+
+
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 
@@ -70,7 +88,37 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Regular.ttf
+        - asset: assets/font/Roboto/Roboto-Italic.ttf
+          style: italic
+    - family: Roboto-Black
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Black.ttf
+        - asset: assets/font/Roboto/Roboto-BlackItalic.ttf
+          style: italic
+    - family: Roboto-Bold
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Bold.ttf
+        - asset: assets/font/Roboto/Roboto-BoldItalic.ttf
+          style: italic
+    - family: Roboto-Light
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Light.ttf
+        - asset: assets/font/Roboto/Roboto-LightItalic.ttf
+          style: italic
+    - family: Roboto-Medium
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Medium.ttf
+        - asset: assets/font/Roboto/Roboto-MediumItalic.ttf
+          style: italic
+    - family: Roboto-Thin
+      fonts:
+        - asset: assets/font/Roboto/Roboto-Thin.ttf
+        - asset: assets/font/Roboto/Roboto-ThinItalic.ttf
+          style: italic
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

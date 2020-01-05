@@ -1,4 +1,4 @@
-class Image {
+class Picture {
   int imgId;
   String imgTitle;
   String imgDescription;
@@ -6,7 +6,7 @@ class Image {
   DateTime createdAt;
   DateTime updatedAt;
 
-  Image({
+  Picture({
     this.imgId,
     this.imgTitle,
     this.imgDescription,
@@ -15,7 +15,7 @@ class Image {
     this.updatedAt,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory Picture.fromJson(Map<String, dynamic> json) => Picture(
         imgId: json["img_id"],
         imgTitle: json["img_title"],
         imgDescription: json["img_description"],
@@ -23,4 +23,15 @@ class Image {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'img_id': imgId,
+      'img_title': imgTitle,
+      'img_description': imgDescription,
+      'img_path': imgPath,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
 }

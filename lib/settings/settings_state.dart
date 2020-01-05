@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 class SettingsState {
-  SettingsState({@required this.language, @required this.languageMap});
-  final String language;
-  final Map<String, dynamic> languageMap;
+  SettingsState({this.language, this.languageMap});
+  String language;
+  Map<String, dynamic> languageMap;
 
   Map<String, String> toMap(SettingsState settingsState) {
     return {

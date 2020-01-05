@@ -1,3 +1,7 @@
+import 'package:alpha_task/model/category.dart';
+import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/model/event.dart';
+import 'package:alpha_task/model/site.dart';
 import 'package:sembast/sembast.dart';
 
 import 'app_database.dart';
@@ -18,8 +22,6 @@ class DbManager {
   final _eventStore = intMapStoreFactory.store(EVENT_STORE_NAME);
 
   Future<Database> get _db async => await AppDatabase.instance.database;
-
-  /*
 
   // Site Management Functions
 
@@ -185,6 +187,4 @@ class DbManager {
       event.key = snapshot.key;
     }).toList();
   }
-
-  */
 }

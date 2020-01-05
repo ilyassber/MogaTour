@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:alpha_task/model/step.dart';
+import 'package:alpha_task/model/xstep.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkTools {
@@ -28,7 +28,7 @@ class NetworkTools {
         throw new Exception(res);
       }
 
-      List<Step> steps;
+      List<XStep> steps;
       try {
         steps =
             parseSteps(_decoder.convert(res)["routes"][0]["legs"][0]["steps"]);
@@ -40,9 +40,9 @@ class NetworkTools {
     });
   }
 
-  List<Step> parseSteps(final responseBody) {
+  List<XStep> parseSteps(final responseBody) {
     var list =
-    responseBody.map<Step>((json) => new Step.fromJson(json)).toList();
+    responseBody.map<XStep>((json) => new XStep.fromJson(json)).toList();
 
     return list;
   }
