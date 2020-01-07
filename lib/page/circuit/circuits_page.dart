@@ -1,47 +1,32 @@
-import 'package:alpha_task/model/category.dart';
-import 'package:alpha_task/page/circuit/circuit.dart';
-import 'package:alpha_task/widget/circuit_category.dart';
+import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/page/circuit/circuit_page.dart';
+import 'package:alpha_task/settings/settings_state.dart';
+import 'package:alpha_task/widget/circuit_widget.dart';
 import 'package:alpha_task/widget/new_circuit.dart';
 import 'package:alpha_task/widget/v_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CircuitsPage {
-  List<Widget> categoryList = [];
-  Map<String, String> languageMap;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  CircuitsPage({@required this.settingsState, @required this.circuits});
 
-  void init_list(BuildContext context, List<Widget> categoryList) {
-    categoryList.clear();
+  SettingsState settingsState;
+  List<Circuit> circuits;
+  List<Widget> circuitsList = [];
 
-    categoryList.addAll([
-      new CircuitsCategory(
+  void initList(BuildContext context, List<Widget> categoryList) {
+    for (int i = 0; i < circuits.length; i++) {
+      categoryList.add(new CircuitWidget(
         context: context,
-        category: new Category(
-          categoryId: 1,
-          categoryName: 'Art',
-        ),
-      ),
-      new CircuitsCategory(
-        context: context,
-        category: new Category(
-          categoryId: 1,
-          categoryName: 'Sport',
-        ),
-      ),
-      new CircuitsCategory(
-        context: context,
-        category: new Category(
-          categoryId: 1,
-          categoryName: 'Spirituel',
-        ),
-      ),
-    ]);
+        settingsState: settingsState,
+        circuit: circuits[i],
+      ).build(context));
+    }
     categoryList.add(NewCircuit(
       context: context,
+      settingsState: settingsState,
       title: 'Circuit Personnalise',
       option: 'Nouveau Circuit',
-    ));
+    ).build(context));
   }
 
 //  String getAttr(String title) {
@@ -56,7 +41,7 @@ class CircuitsPage {
 //  }
 
   Widget build(BuildContext context) {
-    init_list(context, categoryList);
+    initList(context, circuitsList);
 //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
 //      statusBarColor: Colors.white,
 //    ));
@@ -66,11 +51,15 @@ class CircuitsPage {
         children: [
           VList(
             context: context,
-            list: categoryList,
+            list: circuitsList,
             onClick: (index) => {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Circuit()),
+                MaterialPageRoute(
+                    builder: (context) => CircuitPage(
+                          settingsState: settingsState,
+                          circuit: circuits[index],
+                        )),
               ),
             },
           ),

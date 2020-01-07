@@ -41,6 +41,10 @@ class CircuitState extends State<Circuit> {
       statusBarColor: Colors.white,
     ));
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
 //      appBar: AppBar(
 //        iconTheme: IconThemeData(color: Colors.black),
 //        automaticallyImplyLeading: false,

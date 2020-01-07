@@ -1,40 +1,29 @@
 import 'package:alpha_task/model/category.dart';
+import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/settings/settings_state.dart';
 import 'package:alpha_task/widget/m_elem.dart';
 import 'package:alpha_task/widget/x_list.dart';
 import 'package:flutter/material.dart';
 
-class CircuitsCategory extends StatefulWidget {
-  CircuitsCategory({
+class CircuitWidget {
+  CircuitWidget({
     @required this.context,
-    @required this.category,
+    @required this.settingsState,
+    @required this.circuit,
   });
 
   final BuildContext context;
-  final Category category;
+  final SettingsState settingsState;
+  final Circuit circuit;
+  List<Widget> sitesList = [];
 
-  @override
-  CircuitsCategoryState createState() => CircuitsCategoryState();
-}
-
-class CircuitsCategoryState extends State<CircuitsCategory> {
-  @override
-  BuildContext context;
-  Category category;
-  List<Widget> circuitList = [];
-
-  @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    category = widget.category;
-    context = widget.context;
-    circuitList.addAll([
-      new MedElem(
+    for (int i = 0; i < circuit.sites.length; i++) {
+      sitesList.add(new MedElem(
           context: context,
-          id: 0,
-          selected: 0,
-          title: 'Artisanal',
+          id: circuit.sites[i].siteId,
+          selected: 1,
+          title: circuit.sites[i].siteTitle,
           image: new DecorationImage(
             fit: BoxFit.cover,
             image: AssetImage('assets/images/circuit_categories/artisanal.jpg'),
@@ -42,38 +31,12 @@ class CircuitsCategoryState extends State<CircuitsCategory> {
           onClick: null,
           height: 100,
           width: 130,
-          fontSize: 14),
-      new MedElem(
-          context: context,
-          id: 0,
-          selected: 0,
-          title: 'Culturel',
-          image: new DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/images/circuit_categories/culturel.jpg'),
-          ),
-          onClick: null,
-          height: 100,
-          width: 130,
-          fontSize: 14),
-      new MedElem(
-          context: context,
-          id: 0,
-          selected: 0,
-          title: 'Sport',
-          image: new DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/images/circuit_categories/sport.jpg'),
-          ),
-          onClick: null,
-          height: 100,
-          width: 130,
-          fontSize: 14),
-    ]);
+          fontSize: 14));
+    }
   }
 
-  @override
   Widget build(BuildContext context) {
+    initState();
     return Column(
       children: <Widget>[
         Padding(
@@ -88,7 +51,7 @@ class CircuitsCategoryState extends State<CircuitsCategory> {
                     Container(
                       height: 30,
                       child: Text(
-                        '${category.categoryName}',
+                        '${circuit.circuitName}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
@@ -125,7 +88,7 @@ class CircuitsCategoryState extends State<CircuitsCategory> {
                 height: 100,
                 child: XList(
                   context: context,
-                  list: circuitList,
+                  list: sitesList,
                   onClick: null,
                 ).build(context),
               ),

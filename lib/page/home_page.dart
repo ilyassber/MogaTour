@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:alpha_task/database/db_manager.dart';
+import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/page/circuit/circuits_page.dart';
 import 'package:alpha_task/page/main_page.dart';
 import 'package:alpha_task/page/map/map_page.dart';
@@ -14,12 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+
+  // DB Params
+
+  DbManager _dbManager = DbManager();
+  List<Circuit> circuits;
+
   // Global Params
 
   SharedPreferences prefs;
   bool ready = false;
   int _currentIndex = 2;
-  final List<Widget> _children = [];
+  List<Widget> _children = [];
   double height;
   double width;
 
@@ -30,13 +38,17 @@ class HomePageState extends State<HomePage> {
   void initEnv() async {
     state = new SettingsState();
     prefs = await SharedPreferences.getInstance();
+    circuits = await _dbManager.getAllCircuits();
     state.language = prefs.get('language');
     state.languageMap = json.decode(prefs.get(state.language));
     _children.addAll([
       MapPage(
-        circuit: null,
+        circuit: (circuits != null) ? (circuits.length > 0) ? circuits[0] : null : null,
       ),
-      CircuitsPage().build(context),
+      CircuitsPage(
+        settingsState: state,
+        circuits: circuits,
+      ).build(context),
       MainPage(
         state: state,
       ),
@@ -63,6 +75,11 @@ class HomePageState extends State<HomePage> {
             color: Colors.black,
           )
         : Scaffold(
+            extendBodyBehindAppBar: (_currentIndex == 2) ? true : false,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
             body: (_currentIndex == 2)
                 ? _children[_currentIndex]
                 : Padding(

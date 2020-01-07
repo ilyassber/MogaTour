@@ -6,6 +6,7 @@ import 'package:alpha_task/model/category.dart';
 import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/model/site.dart';
 import 'package:alpha_task/page/circuit/circuit_page.dart';
+import 'package:alpha_task/settings/settings_state.dart';
 import 'package:alpha_task/tools/filter.dart';
 import 'package:alpha_task/widget/circuit_site.dart';
 import 'package:alpha_task/widget/elem_to_widget.dart';
@@ -13,16 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCircuit extends StatefulWidget {
-  CreateCircuit({this.languageMap});
+  CreateCircuit({@required this.settingsState});
 
-  final Map<String, String> languageMap;
+  final SettingsState settingsState;
 
   @override
   CreateCircuitState createState() => CreateCircuitState();
 }
 
 class CreateCircuitState extends State<CreateCircuit> {
-  Map<String, String> _languageMap;
+  SettingsState settingsState;
   int count = 0;
   String circuit = 'Mon Circuit';
   TextEditingController textController = new TextEditingController();
@@ -160,10 +161,10 @@ class CreateCircuitState extends State<CreateCircuit> {
     elemToWidget = new ElemToWidget(function: refresh);
     filter = new Filter();
     _dbManager = DbManager();
- //   initData();
+    //   initData();
     _dataBloc.add(DataEvent.loadData);
     elemToWidget = new ElemToWidget(function: refresh);
-    _languageMap = widget.languageMap;
+    settingsState = widget.settingsState;
   }
 
   Widget buildBody(BuildContext context) {
@@ -217,17 +218,15 @@ class CreateCircuitState extends State<CreateCircuit> {
                         InkWell(
                           onTap: () {
                             Circuit circuit = new Circuit(
-                                circuitName: "my circuit",
-                                sites: circuitSites
-                            );
+                                circuitName: "my circuit", sites: circuitSites);
                             for (int i = 0; i < circuitSites.length; i++) {
                               circuitSites[i].selected = 1;
                             }
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => CircuitPage(
-                                  languageMap: _languageMap,
-                                  circuit: circuit,
-                                )));
+                                      settingsState: settingsState,
+                                      circuit: circuit,
+                                    )));
                           },
                           child: Align(
                             alignment: Alignment.topRight,
@@ -247,7 +246,7 @@ class CreateCircuitState extends State<CreateCircuit> {
                                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Align(
                                       alignment: Alignment.centerLeft,
@@ -318,7 +317,7 @@ class CreateCircuitState extends State<CreateCircuit> {
                         Container(
                           height: 24,
                           width:
-                          MediaQuery.of(context).size.width - 20 - 30 - 6,
+                              MediaQuery.of(context).size.width - 20 - 30 - 6,
                           child: Padding(
                             padding: EdgeInsets.all(3),
                             child: TextField(
@@ -399,6 +398,10 @@ class CreateCircuitState extends State<CreateCircuit> {
         primarySwatch: Colors.brown,
       ),
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
 //        appBar: AppBar(
 //          iconTheme: IconThemeData(color: Colors.black),
 //          automaticallyImplyLeading: false,
@@ -425,7 +428,10 @@ class CreateCircuitState extends State<CreateCircuit> {
 //          child: getDrawerNew(context, _languageMap),
 //        ),
 //        backgroundColor: colors_lib.generalBGColor,
-        body: buildBody(context),
+        body: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
+          child: buildBody(context),
+        ),
       ),
     );
   }

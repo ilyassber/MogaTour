@@ -1,35 +1,19 @@
 import 'package:alpha_task/page/circuit/create_circuit.dart';
+import 'package:alpha_task/settings/settings_state.dart';
 import 'package:flutter/material.dart';
 
-class NewCircuit extends StatefulWidget {
+class NewCircuit {
   NewCircuit(
-      {@required this.context, @required this.title, @required this.option});
+      {@required this.context,
+      @required this.settingsState,
+      @required this.title,
+      @required this.option});
 
   final BuildContext context;
+  final SettingsState settingsState;
   final String title;
   final String option;
 
-  @override
-  _NewCircuitState createState() => _NewCircuitState();
-}
-
-class _NewCircuitState extends State<NewCircuit> {
-  @override
-  BuildContext context;
-  String title;
-  String option;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    context = widget.context;
-    title = widget.title;
-    option = widget.option;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -64,7 +48,10 @@ class _NewCircuitState extends State<NewCircuit> {
           onTap: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CreateCircuit()),
+              MaterialPageRoute(
+                  builder: (context) => CreateCircuit(
+                        settingsState: settingsState,
+                      )),
             ),
           },
           child: Container(

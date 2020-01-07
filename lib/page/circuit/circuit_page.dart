@@ -1,14 +1,15 @@
 import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/model/site.dart';
 import 'package:alpha_task/page/map/map_page.dart';
+import 'package:alpha_task/settings/settings_state.dart';
 import 'package:alpha_task/widget/elem_to_widget.dart';
 import 'package:flutter/material.dart';
 
 class CircuitPage extends StatefulWidget {
-  CircuitPage({@required this.languageMap, @required this.circuit});
+  CircuitPage({@required this.settingsState, @required this.circuit});
 
   final Circuit circuit;
-  final Map<String, String> languageMap;
+  final SettingsState settingsState;
 
   @override
   CircuitPageState createState() => CircuitPageState();
@@ -16,7 +17,7 @@ class CircuitPage extends StatefulWidget {
 
 class CircuitPageState extends State<CircuitPage> {
   ElemToWidget elemToWidget = new ElemToWidget();
-  Map<String, String> _languageMap;
+  SettingsState settingsState;
   Circuit circuit;
   List<Site> circuitSites;
   List<Widget> circuitWidget = [];
@@ -34,7 +35,7 @@ class CircuitPageState extends State<CircuitPage> {
   @override
   void initState() {
     super.initState();
-    _languageMap = widget.languageMap;
+    settingsState = widget.settingsState;
     circuit = widget.circuit;
     circuitSites = circuit.sites;
   }
