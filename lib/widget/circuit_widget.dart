@@ -18,20 +18,23 @@ class CircuitWidget {
   List<Widget> sitesList = [];
 
   void initState() {
-    for (int i = 0; i < circuit.sites.length; i++) {
-      sitesList.add(new MedElem(
-          context: context,
-          id: circuit.sites[i].siteId,
-          selected: 1,
-          title: circuit.sites[i].siteTitle,
-          image: new DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/images/circuit_categories/artisanal.jpg'),
-          ),
-          onClick: null,
-          height: 100,
-          width: 130,
-          fontSize: 14));
+    if (circuit.sites != null) {
+      for (int i = 0; i < circuit.sites.length; i++) {
+        sitesList.add(new MedElem(
+            context: context,
+            id: circuit.sites[i].siteId,
+            selected: 1,
+            title: circuit.sites[i].siteTitle,
+            image: new DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(
+                  'assets/images/circuit_categories/artisanal.jpg'),
+            ),
+            onClick: null,
+            height: 100,
+            width: 130,
+            fontSize: 14));
+      }
     }
   }
 

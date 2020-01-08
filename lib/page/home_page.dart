@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
   // DB Params
 
   DbManager _dbManager = DbManager();
@@ -39,11 +38,14 @@ class HomePageState extends State<HomePage> {
     state = new SettingsState();
     prefs = await SharedPreferences.getInstance();
     circuits = await _dbManager.getAllCircuits();
+    print('home page circuits length : ${circuits.length}');
     state.language = prefs.get('language');
     state.languageMap = json.decode(prefs.get(state.language));
     _children.addAll([
       MapPage(
-        circuit: (circuits != null) ? (circuits.length > 0) ? circuits[0] : null : null,
+        circuit: (circuits != null)
+            ? (circuits.length > 0) ? circuits[0] : null
+            : null,
       ),
       CircuitsPage(
         settingsState: state,

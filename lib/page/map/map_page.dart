@@ -26,7 +26,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   Circuit circuit;
-  static List<Site> sites;
+  List<Site> sites = [];
   NetworkTools network = new NetworkTools();
   ElemToWidget elemToWidget = new ElemToWidget();
   GeoTools geoTools = new GeoTools();
@@ -73,16 +73,18 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     circuit = widget.circuit;
-    sites = circuit.sites;
+    if (circuit.sites != null) sites = circuit.sites;
     geoTools.initSitesGeoPos(sites);
     _StartCamera = CameraPosition(
-      target: getSitePosition(sites[0]),
+      target: (sites != null && sites.length > 0)
+          ? getSitePosition(sites[0])
+          : new LatLng(0.0, 0.0),
       zoom: 14.4746,
     );
     Future<Uint8List>.delayed(new Duration(milliseconds: 0),
-    () => getBytesFromAsset('assets/icons/marker1.png', 100)).then((value) {
-    markerIcon = value;
-    initMarkers();
+        () => getBytesFromAsset('assets/icons/marker1.png', 100)).then((value) {
+      markerIcon = value;
+      initMarkers();
     });
   }
 
@@ -133,14 +135,14 @@ class _MapPageState extends State<MapPage> {
     while (i < length) {
       await network
           .get("origin=" +
-          steps[i].startLocation.latitude.toString() +
-          "," +
-          steps[i].startLocation.longitude.toString() +
-          "&destination=" +
-          steps[i].endLocation.latitude.toString() +
-          "," +
-          steps[i].endLocation.longitude.toString() +
-          "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
+              steps[i].startLocation.latitude.toString() +
+              "," +
+              steps[i].startLocation.longitude.toString() +
+              "&destination=" +
+              steps[i].endLocation.latitude.toString() +
+              "," +
+              steps[i].endLocation.longitude.toString() +
+              "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
           .then((dynamic res) {
         print(res.length.toString() + ' + ' + result.length.toString());
         result.addAll(res);
@@ -157,14 +159,14 @@ class _MapPageState extends State<MapPage> {
     List<XStep> rr;
     network
         .get("origin=" +
-        step.startLocation.latitude.toString() +
-        "," +
-        step.startLocation.longitude.toString() +
-        "&destination=" +
-        step.endLocation.latitude.toString() +
-        "," +
-        step.endLocation.longitude.toString() +
-        "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
+            step.startLocation.latitude.toString() +
+            "," +
+            step.startLocation.longitude.toString() +
+            "&destination=" +
+            step.endLocation.latitude.toString() +
+            "," +
+            step.endLocation.longitude.toString() +
+            "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
         .then((dynamic res) {
       rr = res;
     });
@@ -199,8 +201,8 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     initList(context);
 
-    return new Scaffold(
-      body: Stack(
+    return new Container(
+      child: Stack(
         children: <Widget>[
           GoogleMap(
             polylines: _polyline,

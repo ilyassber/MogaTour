@@ -36,19 +36,26 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     var categoryUrl = "http://165.227.192.11/api/1/categories/sites";
     var circuitUrl = "http://165.227.192.11/api/1/circuits/all";
 
+    await _dbManager.deleteAllCircuit();
+    await _dbManager.deleteAllCategory();
+    await _dbManager.deleteAllSite();
+
     List<Site> sites = await _dbManager.getAllSites();
     List<Category> categories = await _dbManager.getAllCategories();
     List<Circuit> circuits = await _dbManager.getAllCircuits();
 
     if (sites == null || sites.length == 0) {
+      print(sites.length);
       var response = await http.get(siteUrl);
       print("response code == ${response.statusCode}");
       if (response.statusCode == 200) {
         Iterable jsonResponse = json.decode(response.body);
-        print('>>> success! >>> $jsonResponse');
+        print('>>> success! >>> ${response.body}');
         try {
           sites = jsonResponse.map((x) => Site.fromMap(x)).toList();
-          (x) => _dbManager.insertSite(sites[x]);
+          for (int i = 0; i < sites.length; i++) {
+            _dbManager.insertSite(sites[i]);
+          }
         } catch (e) {
           print(e);
         }
@@ -59,6 +66,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print("Sites data is already there : length = ${sites.length}");
 
     if (categories == null || categories.length == 0) {
+      print(categories.length);
       var response = await http.get(categoryUrl);
       print("response code == ${response.statusCode}");
       if (response.statusCode == 200) {
@@ -66,8 +74,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         print('>>> success! >>> $jsonResponse');
         try {
           categories = jsonResponse.map((x) => Category.fromMap(x)).toList();
-          (x) => _dbManager.insertCategory(categories[x]);
-          categories[0].selected = 1;
+          if (categories != null && categories.length > 0) {
+            for (int i = 0; i < categories.length; i++) {
+              _dbManager.insertCategory(categories[i]);
+            }
+            categories[0].selected = 1;
+          }
         } catch (e) {
           print(e);
         }
@@ -78,16 +90,19 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print("Categories data is already there : length = ${categories.length}");
 
     if (circuits == null || circuits.length == 0) {
+      print(circuits.length);
       var response = await http.get(circuitUrl);
       print("response code == ${response.statusCode}");
       if (response.statusCode == 200) {
         Iterable jsonResponse = json.decode(response.body);
-        print('>>> success! >>> $jsonResponse');
+        print('>>> success! >>> ${response.body}');
         try {
           circuits = jsonResponse.map((x) => Circuit.fromMap(x)).toList();
-              (x) => _dbManager.insertCircuit(circuits[x]);
+          for (int i = 0; i < circuits.length; i++) {
+            _dbManager.insertCircuit(circuits[i]);
+          }
         } catch (e) {
-          print(e);
+          print("ERROR : $e");
         }
       } else {
         print('>>> fail?');

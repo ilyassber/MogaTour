@@ -61,6 +61,14 @@ class DbManager {
     }).toList();
   }
 
+  Future deleteAllSite() async {
+    final finder = Finder();
+    await _siteStore.delete(
+      await _db,
+      finder: finder,
+    );
+  }
+
   Future<List<Site>> getAllSortedClick() async {
     final finder = Finder(sortOrders: [
       SortOrder('nbr_clicks'),
@@ -81,6 +89,7 @@ class DbManager {
   // Circuit Management Functions
 
   Future insertCircuit(Circuit circuit) async {
+    print(circuit.toMap());
     await _circuitStore.add(await _db, circuit.toMap());
   }
 
@@ -114,6 +123,14 @@ class DbManager {
       circuit.key = snapshot.key;
       return circuit;
     }).toList();
+  }
+
+  Future deleteAllCircuit() async {
+    final finder = Finder();
+    await _circuitStore.delete(
+      await _db,
+      finder: finder,
+    );
   }
 
   // Category Management Functions
@@ -152,6 +169,14 @@ class DbManager {
     }).toList();
   }
 
+  Future deleteAllCategory() async {
+    final finder = Finder();
+    await _categoryStore.delete(
+      await _db,
+      finder: finder,
+    );
+  }
+
   // Event Management Functions
 
   Future insertEvent(Event event) async {
@@ -186,5 +211,13 @@ class DbManager {
       final event = Event.fromMap(snapshot.value);
       event.key = snapshot.key;
     }).toList();
+  }
+
+  Future deleteAllEvent() async {
+    final finder = Finder();
+    await _eventStore.delete(
+      await _db,
+      finder: finder,
+    );
   }
 }

@@ -81,14 +81,15 @@ class Site {
       'description_400m': siteDescriptionLong,
       'active': active,
       //'audio_path': audioPath,
-      'created_at': createdAt,
-      'updated_at': updatedAt,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
       'num_tel': phoneNumber,
     };
     //return map;
   }
 
   static Site fromMap(Map<String, dynamic> map) {
+    print("> enter to site <");
     return Site(
       map: map,
       siteId: map["site_id"],
@@ -114,43 +115,48 @@ class Site {
       prix: map["prix"],
       nbrClicks: map["nbr_clicks"],
       nbrVisitsGps: map["nbr_visits_gps"],
-      images: List<Picture>.from(map["images"].map((x) => Picture.fromJson(x))),
-      categories: List<Category>.from(
-          map["categories"].map((x) => Category.fromJson(x))),
+      images: (map['images'] == '[]')
+          ? List<Picture>.from(map["images"].map((x) => Picture.fromJson(x)))
+          : [],
+      categories: (map['categories'] == '[]')
+          ? List<Category>.from(
+              map["categories"].map((x) => Category.fromJson(x)))
+          : [],
       // videos: List<dynamic>.from(json["videos"].map((x) => x)),
     );
   }
 
-  factory Site.fromJson(Map<String, dynamic> json) => Site(
-        siteId: json["site_id"],
-        siteTitle: json["title"],
-        siteSousTitle: json["site_sous_title"],
-        siteDescriptionShort: json["description_200m"],
-        siteDescriptionLong: json["description_400m"],
-        active: json["active"],
-        //audioPath: json["audio_path"].split('/')[4].toString(),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        phoneNumber: json["num_tel"],
-        gpsLocation: json["gps_location"],
-        gpsDiametre: json["gps_diametre"],
-        rating: json["rating"],
-        isTemporary: json["is_temporary"],
-        url: json["url"],
-        openingTime: json["temps_ouverture"],
-        closingTime: json["temps_fermeture"],
-        duration: json["duration"],
-        email: json["email"],
-        adresse: json["adresse"],
-        prix: json["prix"],
-        nbrClicks: json["nbr_clicks"],
-        nbrVisitsGps: json["nbr_visits_gps"],
-        images: List<Picture>.from(json["images"].map((x) => Picture.fromJson(x))),
-        categories: List<Category>.from(
-            json["categories"].map((x) => Category.fromJson(x))),
-        // videos: List<dynamic>.from(json["videos"].map((x) => x)),
-      );
-
-  static List<Site> siteFromJson(String str) =>
-      List<Site>.from(json.decode(str).map((x) => Site.fromJson(x)));
+//  factory Site.fromJson(Map<String, dynamic> json) => Site(
+//        siteId: json["site_id"],
+//        siteTitle: json["title"],
+//        siteSousTitle: json["site_sous_title"],
+//        siteDescriptionShort: json["description_200m"],
+//        siteDescriptionLong: json["description_400m"],
+//        active: json["active"],
+//        //audioPath: json["audio_path"].split('/')[4].toString(),
+//        createdAt: DateTime.parse(json["created_at"]),
+//        updatedAt: DateTime.parse(json["updated_at"]),
+//        phoneNumber: json["num_tel"],
+//        gpsLocation: json["gps_location"],
+//        gpsDiametre: json["gps_diametre"],
+//        rating: json["rating"],
+//        isTemporary: json["is_temporary"],
+//        url: json["url"],
+//        openingTime: json["temps_ouverture"],
+//        closingTime: json["temps_fermeture"],
+//        duration: json["duration"],
+//        email: json["email"],
+//        adresse: json["adresse"],
+//        prix: json["prix"],
+//        nbrClicks: json["nbr_clicks"],
+//        nbrVisitsGps: json["nbr_visits_gps"],
+//        images:
+//            List<Picture>.from(json["images"].map((x) => Picture.fromJson(x))),
+//        categories: List<Category>.from(
+//            json["categories"].map((x) => Category.fromJson(x))),
+//        // videos: List<dynamic>.from(json["videos"].map((x) => x)),
+//      );
+//
+//  static List<Site> siteFromJson(String str) =>
+//      List<Site>.from(json.decode(str).map((x) => Site.fromJson(x)));
 }
