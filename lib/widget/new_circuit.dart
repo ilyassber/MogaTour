@@ -85,7 +85,7 @@ class NewCircuit {
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(7),
                             child: Container(
                               width: 40,
                               height: 40,
@@ -107,7 +107,7 @@ class NewCircuit {
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w300,
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                         ),

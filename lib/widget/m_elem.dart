@@ -1,16 +1,17 @@
+import 'package:alpha_task/tools/TextTools.dart';
 import 'package:flutter/material.dart';
 
-class MedElem extends StatefulWidget {
+class MedElem {
   MedElem(
       {@required this.context,
-        @required this.id,
-        @required this.selected,
-        @required this.title,
-        @required this.image,
-        @required this.onClick,
-        @required this.height,
-        @required this.width,
-        @required this.fontSize});
+      @required this.id,
+      @required this.selected,
+      @required this.title,
+      @required this.image,
+      @required this.onClick,
+      @required this.height,
+      @required this.width,
+      @required this.fontSize});
 
   final BuildContext context;
   final int id;
@@ -22,50 +23,16 @@ class MedElem extends StatefulWidget {
   final double width;
   final double fontSize;
 
-  @override
-  MedElemState createState() => MedElemState();
-}
+  TextTools textTools = new TextTools();
 
-class MedElemState extends State<MedElem> {
-  @override
-  BuildContext context;
-  int id;
-  int selected;
-  double height;
-  double width;
-  double fontSize;
-  String title;
-  DecorationImage image;
-  void Function(int, int) onClick;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    context = widget.context;
-    id = widget.id;
-    selected = widget.selected;
-    height = widget.height;
-    width = widget.width;
-    fontSize = widget.fontSize;
-    title = widget.title;
-    image = widget.image;
-    onClick = widget.onClick;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    context = this.context;
+  Widget build() {
     return InkWell(
       onTap: () {
-        setState(() {
-          if (selected == 0) {
-            selected = 1;
-            onClick(id, 1);
-          } else if (selected == 1) {
-            selected = 0;
-            onClick(id, 0);
-          }
-        });
+        if (selected == 0) {
+          onClick(id, 1);
+        } else if (selected == 1) {
+          onClick(id, 0);
+        }
       },
       child: Container(
         width: width,
@@ -131,8 +98,8 @@ class MedElemState extends State<MedElem> {
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: Text(
-                    title,
-                    style: TextStyle(color: Colors.white, fontSize: fontSize),
+                    textTools.resizeText(title, 18),
+                    style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: fontSize, fontFamily: 'Roboto'),
                   ),
                 ),
               ),

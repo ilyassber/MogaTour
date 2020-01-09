@@ -18,7 +18,8 @@ class CircuitWidget {
   List<Widget> sitesList = [];
 
   void initState() {
-    if (circuit.sites != null) {
+    print("Circuit Widget > Circuit > ${circuit.toMap()}");
+    if (circuit != null && circuit.sites != null) {
       for (int i = 0; i < circuit.sites.length; i++) {
         sitesList.add(new MedElem(
             context: context,
@@ -33,7 +34,7 @@ class CircuitWidget {
             onClick: null,
             height: 100,
             width: 130,
-            fontSize: 14));
+            fontSize: 12).build());
       }
     }
   }

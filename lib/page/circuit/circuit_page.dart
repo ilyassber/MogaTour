@@ -55,7 +55,7 @@ class CircuitPageState extends State<CircuitPage> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         canvasColor: Colors.white,
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.black54,
       ),
       home: Scaffold(
 //        appBar: AppBar(

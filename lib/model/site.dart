@@ -75,7 +75,7 @@ class Site {
   Map<String, dynamic> toMap() {
     return {
       'site_id': siteId,
-      'site_title': siteTitle,
+      'title': siteTitle,
       'site_sous_title': siteSousTitle,
       'description_200m': siteDescriptionShort,
       'description_400m': siteDescriptionLong,
@@ -84,6 +84,7 @@ class Site {
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'num_tel': phoneNumber,
+      'gps_location' : gpsLocation,
     };
     //return map;
   }

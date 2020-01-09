@@ -46,8 +46,10 @@ class CircuitsPage {
 //      statusBarColor: Colors.white,
 //    ));
     return Container(
-      margin: EdgeInsets.only(top: 80.0, left: 10.0, right: 10.0),
+      margin: EdgeInsets.only(top: 0.0, left: 10.0, right: 0.0, bottom: 0.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           VList(
             context: context,

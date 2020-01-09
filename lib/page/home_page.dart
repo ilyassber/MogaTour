@@ -27,6 +27,7 @@ class HomePageState extends State<HomePage> {
   bool ready = false;
   int _currentIndex = 2;
   List<Widget> _children = [];
+  List<String> _titles = [];
   double height;
   double width;
 
@@ -60,6 +61,13 @@ class HomePageState extends State<HomePage> {
     setState(() {
       ready = true;
     });
+    _titles.addAll([
+      'Proximity',
+      'Circuits',
+      '',
+      '',
+      '',
+    ]);
   }
 
   @override
@@ -77,29 +85,41 @@ class HomePageState extends State<HomePage> {
             color: Colors.black,
           )
         : Scaffold(
-            extendBodyBehindAppBar: (_currentIndex == 2) ? true : false,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
+            extendBodyBehindAppBar:
+                (_currentIndex == 2 || _currentIndex == 0) ? true : false,
+//            appBar: AppBar(
+//              title: Align(
+//                alignment: Alignment.center,
+//                child: Text(
+//                  _titles[_currentIndex],
+//                  style: TextStyle(
+//                    fontFamily: 'Roboto-regular',
+//                    color: Colors.black38,
+//                    fontSize: 16,
+//                  ),
+//                ),
+//              ),
+//              backgroundColor: Colors.white.withOpacity(0.1),
+//              elevation: 0,
+//            ),
             body: (_currentIndex == 2)
                 ? _children[_currentIndex]
                 : Padding(
-                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: _children[_currentIndex],
                   ),
             bottomNavigationBar: BottomNavigationBar(
               selectedIconTheme: IconThemeData(
                 color: Colors.black12,
               ),
-              selectedItemColor: Colors.brown,
+              selectedItemColor: Colors.black54,
               unselectedItemColor: Colors.black12,
               unselectedLabelStyle: TextStyle(
                 color: Colors.black12,
                 fontSize: 12,
               ),
               selectedLabelStyle: TextStyle(
-                color: Colors.brown,
+                color: Colors.black54,
                 fontSize: 10,
               ),
               currentIndex: _currentIndex,
@@ -108,7 +128,7 @@ class HomePageState extends State<HomePage> {
                   icon: new Icon(Icons.near_me),
                   activeIcon: Icon(
                     Icons.near_me,
-                    color: Colors.brown,
+                    color: Colors.black54,
                   ),
                   title: new Text(state.languageMap['proximity']),
                 ),
@@ -116,7 +136,7 @@ class HomePageState extends State<HomePage> {
                   icon: new Icon(Icons.map),
                   activeIcon: Icon(
                     Icons.map,
-                    color: Colors.brown,
+                    color: Colors.black54,
                   ),
                   title: new Text(state.languageMap['circuit']),
                 ),
@@ -124,7 +144,7 @@ class HomePageState extends State<HomePage> {
                   icon: Icon(Icons.home),
                   activeIcon: Icon(
                     Icons.home,
-                    color: Colors.brown,
+                    color: Colors.black54,
                   ),
                   title: Text(state.languageMap['home']),
                 ),
@@ -132,7 +152,7 @@ class HomePageState extends State<HomePage> {
                   icon: Icon(Icons.view_agenda),
                   activeIcon: Icon(
                     Icons.view_agenda,
-                    color: Colors.brown,
+                    color: Colors.black54,
                   ),
                   title: Text(state.languageMap['agenda']),
                 ),
@@ -140,7 +160,7 @@ class HomePageState extends State<HomePage> {
                   icon: Icon(Icons.settings),
                   activeIcon: Icon(
                     Icons.settings,
-                    color: Colors.brown,
+                    color: Colors.black54,
                   ),
                   title: Text(state.languageMap['settings']),
                 ),

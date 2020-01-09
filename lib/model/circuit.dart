@@ -41,7 +41,7 @@ class Circuit {
     return {
       'circuit_id': circuitId,
       'lang_id': langId,
-      'circuit_name': circuitName,
+      'title': circuitName,
       'type': type,
       'nbr_clicks': nbrClicks,
       'created_at': createdAt.toIso8601String(),

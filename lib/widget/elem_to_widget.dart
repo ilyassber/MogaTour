@@ -53,7 +53,7 @@ class ElemToWidget {
         onClick: null,
         height: height,
         width: width,
-        fontSize: fontSize);
+        fontSize: fontSize).build();
   }
 
   Widget categoryMedWidget(
@@ -77,14 +77,14 @@ class ElemToWidget {
       height: height,
       width: width,
       fontSize: fontSize,
-    );
+    ).build();
   }
 
-  Widget SitesHListWidget(BuildContext context, List<Site> sites) {
+  Widget sitesHListWidget(BuildContext context, List<Site> sites) {
     List<Widget> list = [];
     int i = 0;
     while (i < sites.length) {
-      list.add(siteMedWidget(context, i, sites[i], 70, 100, 14));
+      list.add(siteMedWidget(context, i, sites[i], 70, 100, 12));
       i++;
     }
     return XList(context: context, list: list, onClick: (index) {}).build(context);
@@ -96,7 +96,7 @@ class ElemToWidget {
     int i = 0;
     while (i < categories.length) {
       list.add(
-          categoryMedWidget(context, i, categories[i], 70, 100, 14, callback));
+          categoryMedWidget(context, i, categories[i], 70, 100, 12, callback));
       i++;
     }
     return XList(context: context, list: list, onClick: (index) {}).build(context);

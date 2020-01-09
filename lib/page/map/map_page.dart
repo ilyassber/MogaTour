@@ -202,6 +202,7 @@ class _MapPageState extends State<MapPage> {
     initList(context);
 
     return new Container(
+      key: Key("map"),
       child: Stack(
         children: <Widget>[
           GoogleMap(
