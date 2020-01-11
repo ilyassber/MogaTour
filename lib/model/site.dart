@@ -7,6 +7,7 @@ class Site {
   Map<String, dynamic> map;
   int key;
   int siteId;
+  int markerId;
   int linked = 0;
   int hidden = 0;
   int visited = 0;
@@ -44,6 +45,7 @@ class Site {
   Site({
     this.map,
     this.siteId,
+    this.markerId,
     this.linked,
     this.siteTitle,
     this.siteSousTitle,
@@ -75,6 +77,7 @@ class Site {
   Map<String, dynamic> toMap() {
     return {
       'site_id': siteId,
+      'marker_id': markerId,
       'title': siteTitle,
       'site_sous_title': siteSousTitle,
       'description_200m': siteDescriptionShort,
@@ -94,6 +97,7 @@ class Site {
     return Site(
       map: map,
       siteId: map["site_id"],
+      markerId: map['marker_id'],
       siteTitle: map["title"],
       siteSousTitle: map["site_sous_title"],
       siteDescriptionShort: map["description_200m"],
