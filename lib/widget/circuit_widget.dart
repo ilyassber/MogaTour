@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alpha_task/model/category.dart';
 import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/settings/settings_state.dart';
@@ -18,23 +20,27 @@ class CircuitWidget {
   List<Widget> sitesList = [];
 
   void initState() {
-    print("Circuit Widget > Circuit > ${circuit.toMap()}");
     if (circuit != null && circuit.sites != null) {
       for (int i = 0; i < circuit.sites.length; i++) {
         sitesList.add(new MedElem(
-            context: context,
-            id: circuit.sites[i].siteId,
-            selected: 1,
-            title: circuit.sites[i].siteTitle,
-            image: new DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(
-                  'assets/images/circuit_categories/artisanal.jpg'),
-            ),
-            onClick: null,
-            height: 100,
-            width: 130,
-            fontSize: 12).build());
+                context: context,
+                id: circuit.sites[i].siteId,
+                selected: 1,
+                title: circuit.sites[i].siteTitle,
+                image: new DecorationImage(
+                  fit: BoxFit.cover,
+                  image: (circuit.sites[i].images[0].localPath == null)
+                      ? AssetImage(
+                          'assets/images/circuit_categories/artisanal.jpg')
+                      : FileImage(
+                          new File(circuit.sites[i].images[0].localPath),
+                        ),
+                ),
+                onClick: null,
+                height: 100,
+                width: 130,
+                fontSize: 12)
+            .build());
       }
     }
   }

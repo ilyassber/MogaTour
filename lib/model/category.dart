@@ -41,16 +41,4 @@ class Category {
       image: json["image"],
     );
   }
-
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
-    categoryId: json["category_id"],
-    categoryName: json["title"],
-    nbrClicks: json["nbr_clicks"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-  );
-
-  static List<Category> categorySiteFromJson(String str) =>
-      List<Category>.from(
-  json.decode(str).map((x) => Category.fromJson(x)));
 }

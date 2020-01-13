@@ -26,13 +26,13 @@ class DbManager {
   // Site Management Functions
 
   Future insertSite(Site site) async {
+    print(site.images[0].toMap());
     await _siteStore.add(await _db, site.toMap());
   }
 
   Future updateSite(Site site) async {
-    // For filtering by key (ID), RegEx, greater than, and many other criteria,
-    // we use a Finder.
-    final finder = Finder(filter: Filter.byKey(site.siteId));
+    print(site.images[0].toMap());
+    final finder = Finder(filter: Filter.byKey(site.key));
     await _siteStore.update(
       await _db,
       site.toMap(),
@@ -89,7 +89,6 @@ class DbManager {
   // Circuit Management Functions
 
   Future insertCircuit(Circuit circuit) async {
-    print(circuit.toMap());
     await _circuitStore.add(await _db, circuit.toMap());
   }
 

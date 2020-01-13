@@ -90,12 +90,9 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print("Categories data is already there : length = ${categories.length}");
 
     if (circuits == null || circuits.length == 0) {
-      print(circuits.length);
       var response = await http.get(circuitUrl);
-      print("response code == ${response.statusCode}");
       if (response.statusCode == 200) {
         Iterable jsonResponse = json.decode(response.body);
-        print('>>> success! >>> ${response.body}');
         try {
           circuits = jsonResponse.map((x) => Circuit.fromMap(x)).toList();
           for (int i = 0; i < circuits.length; i++) {

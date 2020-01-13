@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:alpha_task/database/db_manager.dart';
+import 'package:alpha_task/database/image_db_manager.dart';
 import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/page/circuit/circuits_page.dart';
 import 'package:alpha_task/page/main_page.dart';
@@ -19,7 +20,8 @@ class HomePageState extends State<HomePage> {
   // DB Params
 
   DbManager _dbManager = DbManager();
-  List<Circuit> circuits;
+  ImageDbManager _imageDbManager = new ImageDbManager();
+  List<Circuit> circuits = [];
 
   // Global Params
 
@@ -38,29 +40,11 @@ class HomePageState extends State<HomePage> {
   void initEnv() async {
     state = new SettingsState();
     prefs = await SharedPreferences.getInstance();
-    circuits = await _dbManager.getAllCircuits();
-    print('home page circuits length : ${circuits.length}');
+    circuits.addAll(await _dbManager.getAllCircuits());
+    loadImages(circuits);
+    print('image path : ${circuits[0].sites[0].images[0].localPath}');
     state.language = prefs.get('language');
     state.languageMap = json.decode(prefs.get(state.language));
-    _children.addAll([
-      MapPage(
-        circuit: (circuits != null)
-            ? (circuits.length > 0) ? circuits[0] : null
-            : null,
-      ),
-      CircuitsPage(
-        settingsState: state,
-        circuits: circuits,
-      ).build(context),
-      MainPage(
-        state: state,
-      ),
-      Container(),
-      Container(),
-    ]);
-    setState(() {
-      ready = true;
-    });
     _titles.addAll([
       'Proximity',
       'Circuits',
@@ -68,6 +52,54 @@ class HomePageState extends State<HomePage> {
       '',
       '',
     ]);
+    setState(() {
+      ready = true;
+    });
+//    _children.addAll([
+//      MapPage(
+//        circuit: (circuits != null)
+//            ? (circuits.length > 0) ? circuits[0] : null
+//            : null,
+//      ),
+//      CircuitsPage(
+//        settingsState: state,
+//        circuits: circuits,
+//      ).build(context),
+//      MainPage(
+//        state: state,
+//      ),
+//      Container(),
+//      Container(),
+//    ]);
+//    setState(() {
+//      ready = true;
+//    });
+//    _titles.addAll([
+//      'Proximity',
+//      'Circuits',
+//      '',
+//      '',
+//      '',
+//    ]);
+  }
+
+  void callBack() {
+    //print(circuits[0].sites[0].images[0].localPath);
+    setState(() {});
+  }
+
+  void loadImages(List<Circuit> circuits) async {
+    int sum = 0;
+    for (int i = 0; i < circuits.length; i++) {
+      sum = sum + await _imageDbManager.loadSitesImages(circuits[i].sites, callBack);
+    }
+    if (sum > 0) {
+      List<Circuit> newCircuits = await _dbManager.getAllCircuits();
+      circuits.clear();
+      circuits.addAll(newCircuits);
+      print(circuits[0].sites[0].images[0].toMap());
+      callBack();
+    }
   }
 
   @override
@@ -80,6 +112,24 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
+    if (ready) {
+      _children.addAll([
+        MapPage(
+          circuit: (circuits != null)
+              ? (circuits.length > 0) ? circuits[0] : null
+              : null,
+        ),
+        CircuitsPage(
+          settingsState: state,
+          circuits: circuits,
+        ).build(context),
+        MainPage(
+          state: state,
+        ),
+        Container(),
+        Container(),
+      ]);
+    }
     return (!ready)
         ? Container(
             color: Colors.black,

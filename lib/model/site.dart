@@ -87,13 +87,24 @@ class Site {
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'num_tel': phoneNumber,
-      'gps_location' : gpsLocation,
+      'gps_location': gpsLocation,
+      'images': images.map((x) => x.toMap()).toList(),
+      'categories': categories.map((x) => x.toMap()).toList(),
     };
     //return map;
   }
 
   static Site fromMap(Map<String, dynamic> map) {
-    print("> enter to site <");
+    List<Picture> images = [];
+    List<Category> categories = [];
+    try {
+      Iterable value = map['images'];
+      images.addAll(value.map((x) => Picture.fromMap(x)).toList());
+      value = map['categories'];
+      categories.addAll(value.map((x) => Category.fromMap(x)).toList());
+    } catch (e) {
+      print("Error : $e");
+    }
     return Site(
       map: map,
       siteId: map["site_id"],
@@ -120,13 +131,8 @@ class Site {
       prix: map["prix"],
       nbrClicks: map["nbr_clicks"],
       nbrVisitsGps: map["nbr_visits_gps"],
-      images: (map['images'] == '[]')
-          ? List<Picture>.from(map["images"].map((x) => Picture.fromJson(x)))
-          : [],
-      categories: (map['categories'] == '[]')
-          ? List<Category>.from(
-              map["categories"].map((x) => Category.fromJson(x)))
-          : [],
+      images: images,
+      categories: categories,
       // videos: List<dynamic>.from(json["videos"].map((x) => x)),
     );
   }

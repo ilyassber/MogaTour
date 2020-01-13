@@ -46,8 +46,8 @@ class Circuit {
       'nbr_clicks': nbrClicks,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'images': jsonTools.listToJson(images),
-      'categories': jsonTools.listToJson(categories),
+      'images': images.map((x) => x.toMap()).toList(),
+      'categories': categories.map((x) => x.toMap()).toList(),
       'sites': sites.map((x) => x.toMap()).toList(),
     };
   }
@@ -56,12 +56,9 @@ class Circuit {
     print("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
     List<Site> sites = [];
     try {
-      print("**value** : ${map['sites'].length}");
       Iterable value = map['sites'];
-      print("**value** : $value");
       //Iterable response = value;
       sites.addAll(value.map((x) => Site.fromMap(x)).toList());
-      print(sites.length);
     } catch (e) {
       print("--ERROR : $e");
     }
@@ -74,7 +71,7 @@ class Circuit {
         createdAt: DateTime.parse(map['created_at']),
         updatedAt: DateTime.parse(map["updated_at"]),
         images: (map['images'] != '[]')
-            ? List<Picture>.from(map['images'].map((x) => Picture.fromJson(x)))
+            ? List<Picture>.from(map['images'].map((x) => Picture.fromMap(x)))
             : [],
         categories: (map['categories'] != '[]')
             ? List<Category>.from(
