@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class XList {
-  XList({@required this.context, @required this.list, @required this.onClick});
+  XList({@required this.list, @required this.onClick});
 
-  final BuildContext context;
   final Function(int index) onClick;
   final List<Widget> list;
 
-  Widget build(BuildContext context) {
-    context = this.context;
+  Widget build() {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: list.length,

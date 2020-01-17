@@ -14,7 +14,7 @@ class NewCircuit {
   final String title;
   final String option;
 
-  Widget build(BuildContext context) {
+  Widget build() {
     return Column(
       children: <Widget>[
         Padding(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alpha_task/model/category.dart';
 import 'package:alpha_task/model/site.dart';
 import 'package:alpha_task/widget/circuit_site.dart';
@@ -19,7 +21,7 @@ class ElemToWidget {
         title: site.siteTitle,
         distance: null,
         image: new DecorationImage(
-          image: AssetImage("assets/images/sites/site1.jpeg"),
+          image: (site.images[0].localPath != null) ? FileImage(new File(site.images[0].localPath)) : NetworkImage(site.images[0].imgPath),
           fit: BoxFit.cover,
         ),
         onClick: null).build(context);
@@ -33,7 +35,7 @@ class ElemToWidget {
         title: category.categoryName,
         distance: null,
         image: new DecorationImage(
-          image: AssetImage("assets/images/circuit_categories/artisanal.jpg"),
+          image: NetworkImage(category.image),
           fit: BoxFit.cover,
         ),
         onClick: null).build(context);
@@ -42,7 +44,6 @@ class ElemToWidget {
   Widget siteMedWidget(BuildContext context, int id, Site site, double height,
       double width, double fontSize) {
     return MedElem(
-        context: context,
         id: id,
         selected: 0,
         title: site.siteTitle,
@@ -65,7 +66,6 @@ class ElemToWidget {
       double fontSize,
       void Function(int, int) callback) {
     return MedElem(
-      context: context,
       id: category.categoryId,
       selected: category.selected,
       title: category.categoryName,
@@ -87,7 +87,7 @@ class ElemToWidget {
       list.add(siteMedWidget(context, i, sites[i], 70, 100, 12));
       i++;
     }
-    return XList(context: context, list: list, onClick: (index) {}).build(context);
+    return XList(list: list, onClick: (index) {}).build();
   }
 
   Widget categoriesHListWidget(BuildContext context, List<Category> categories,
@@ -99,7 +99,7 @@ class ElemToWidget {
           categoryMedWidget(context, i, categories[i], 70, 100, 12, callback));
       i++;
     }
-    return XList(context: context, list: list, onClick: (index) {}).build(context);
+    return XList(list: list, onClick: (index) {}).build();
   }
 
   List<Widget> sitesVListWidget(BuildContext context, List<Site> sites,

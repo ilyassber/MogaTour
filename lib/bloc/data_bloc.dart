@@ -96,6 +96,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         try {
           circuits = jsonResponse.map((x) => Circuit.fromMap(x)).toList();
           for (int i = 0; i < circuits.length; i++) {
+            circuits[i].circuitId += 999;
             _dbManager.insertCircuit(circuits[i]);
           }
         } catch (e) {

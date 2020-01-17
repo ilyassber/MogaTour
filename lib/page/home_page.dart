@@ -37,7 +37,13 @@ class HomePageState extends State<HomePage> {
 
   SettingsState state;
 
-  void initEnv() async {
+  // Pages
+
+  Widget homePage;
+  Widget circuitsPage;
+  Widget mapPage;
+
+  void initEnv(BuildContext context) async {
     state = new SettingsState();
     prefs = await SharedPreferences.getInstance();
     circuits.addAll(await _dbManager.getAllCircuits());
@@ -52,6 +58,20 @@ class HomePageState extends State<HomePage> {
       '',
       '',
     ]);
+    homePage = MainPage(
+      state: state,
+    );
+    circuitsPage = CircuitsPage(
+      context: context,
+      settingsState: state,
+      circuits: circuits,
+    ).build();
+    mapPage = MapPage(
+      circuit: (circuits != null)
+          ? (circuits.length > 0) ? circuits[0] : null
+          : null,
+      buildType: 1,
+    );
     setState(() {
       ready = true;
     });
@@ -91,13 +111,35 @@ class HomePageState extends State<HomePage> {
   void loadImages(List<Circuit> circuits) async {
     int sum = 0;
     for (int i = 0; i < circuits.length; i++) {
-      sum = sum + await _imageDbManager.loadSitesImages(circuits[i].sites, callBack);
+      sum = sum + await _imageDbManager.loadSitesImages(circuits[i], callBack);
     }
     if (sum > 0) {
       List<Circuit> newCircuits = await _dbManager.getAllCircuits();
       circuits.clear();
       circuits.addAll(newCircuits);
       print(circuits[0].sites[0].images[0].toMap());
+      homePage = MainPage(
+        state: state,
+      );
+      circuitsPage = CircuitsPage(
+        context: context,
+        settingsState: state,
+        circuits: circuits,
+      ).build();
+      mapPage = MapPage(
+        circuit: (circuits != null)
+            ? (circuits.length > 0) ? circuits[0] : null
+            : null,
+        buildType: 1,
+      );
+      _children.clear();
+      _children.addAll([
+        mapPage,
+        circuitsPage,
+        homePage,
+        Container(),
+        Container(),
+      ]);
       callBack();
     }
   }
@@ -105,7 +147,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    initEnv();
+    initEnv(context);
   }
 
   @override
@@ -114,18 +156,9 @@ class HomePageState extends State<HomePage> {
     width = MediaQuery.of(context).size.width;
     if (ready) {
       _children.addAll([
-        MapPage(
-          circuit: (circuits != null)
-              ? (circuits.length > 0) ? circuits[0] : null
-              : null,
-        ),
-        CircuitsPage(
-          settingsState: state,
-          circuits: circuits,
-        ).build(context),
-        MainPage(
-          state: state,
-        ),
+        mapPage,
+        circuitsPage,
+        homePage,
         Container(),
         Container(),
       ]);

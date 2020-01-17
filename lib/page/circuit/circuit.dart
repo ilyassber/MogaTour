@@ -75,10 +75,9 @@ class CircuitState extends State<Circuit> {
         child: Column(
           children: [
             VList(
-              context: context,
               list: circuitsList,
               onClick: (index) => {},
-            ),
+            ).build(),
           ],
         ),
       ),

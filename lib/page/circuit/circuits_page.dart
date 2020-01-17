@@ -7,26 +7,38 @@ import 'package:alpha_task/widget/v_list.dart';
 import 'package:flutter/material.dart';
 
 class CircuitsPage {
-  CircuitsPage({@required this.settingsState, @required this.circuits});
+  CircuitsPage(
+      {@required this.context,
+      @required this.settingsState,
+      @required this.circuits});
 
+  final BuildContext context;
   SettingsState settingsState;
   List<Circuit> circuits;
   List<Widget> circuitsList = [];
 
-  void initList(BuildContext context, List<Widget> categoryList) {
+  void initList(List<Widget> categoryList) {
     for (int i = 0; i < circuits.length; i++) {
       categoryList.add(new CircuitWidget(
-        context: context,
-        settingsState: settingsState,
-        circuit: circuits[i],
-      ).build(context));
+          settingsState: settingsState,
+          circuit: circuits[i],
+          f: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CircuitPage(
+                            settingsState: settingsState,
+                            circuit: circuits[i],
+                          )),
+                ),
+              }).build());
     }
     categoryList.add(NewCircuit(
       context: context,
       settingsState: settingsState,
       title: 'Circuit Personnalise',
       option: 'Nouveau Circuit',
-    ).build(context));
+    ).build());
   }
 
 //  String getAttr(String title) {
@@ -40,8 +52,8 @@ class CircuitsPage {
 //    return result;
 //  }
 
-  Widget build(BuildContext context) {
-    initList(context, circuitsList);
+  Widget build() {
+    initList(circuitsList);
 //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
 //      statusBarColor: Colors.white,
 //    ));
@@ -52,7 +64,6 @@ class CircuitsPage {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           VList(
-            context: context,
             list: circuitsList,
             onClick: (index) => {
               Navigator.push(
@@ -64,7 +75,7 @@ class CircuitsPage {
                         )),
               ),
             },
-          ),
+          ).build(),
         ],
       ),
     );

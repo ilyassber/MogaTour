@@ -26,13 +26,12 @@ class DbManager {
   // Site Management Functions
 
   Future insertSite(Site site) async {
-    print(site.images[0].toMap());
-    await _siteStore.add(await _db, site.toMap());
+    await _siteStore.record(site.siteId).put(await _db, site.toMap());
   }
 
   Future updateSite(Site site) async {
     print(site.images[0].toMap());
-    final finder = Finder(filter: Filter.byKey(site.key));
+    final finder = Finder(filter: Filter.byKey(site.siteId));
     await _siteStore.update(
       await _db,
       site.toMap(),
@@ -41,7 +40,7 @@ class DbManager {
   }
 
   Future deleteSite(Site site) async {
-    final finder = Finder(filter: Filter.byKey(site.key));
+    final finder = Finder(filter: Filter.byKey(site.siteId));
     await _siteStore.delete(
       await _db,
       finder: finder,
@@ -89,13 +88,12 @@ class DbManager {
   // Circuit Management Functions
 
   Future insertCircuit(Circuit circuit) async {
-    await _circuitStore.add(await _db, circuit.toMap());
+    await _circuitStore.record(circuit.circuitId).put(await _db, circuit.toMap());
   }
 
   Future updateCircuit(Circuit circuit) async {
-    // For filtering by key (ID), RegEx, greater than, and many other criteria,
-    // we use a Finder.
     final finder = Finder(filter: Filter.byKey(circuit.circuitId));
+    print(finder.toString());
     await _circuitStore.update(
       await _db,
       circuit.toMap(),
@@ -105,6 +103,20 @@ class DbManager {
 
   Future deleteCircuit(Circuit circuit) async {
     final finder = Finder(filter: Filter.byKey(circuit.circuitId));
+
+    final recordSnapshots = await _circuitStore.find(
+      await _db,
+      finder: finder,
+    );
+
+    Circuit oldCircuit = recordSnapshots.map((snapshot) {
+      final circuit = Circuit.fromMap(snapshot.value);
+      circuit.key = snapshot.key;
+      return circuit;
+    }).toList()[0];
+
+    print(oldCircuit.toMap());
+
     await _circuitStore.delete(
       await _db,
       finder: finder,
@@ -135,7 +147,8 @@ class DbManager {
   // Category Management Functions
 
   Future insertCategory(Category category) async {
-    await _categoryStore.add(await _db, category.toMap());
+    //await _categoryStore.add(await _db, category.toMap());
+    await _categoryStore.record(category.categoryId).put(await _db, category.toMap());
   }
 
   Future updateCategory(Category category) async {
@@ -179,7 +192,8 @@ class DbManager {
   // Event Management Functions
 
   Future insertEvent(Event event) async {
-    await _eventStore.add(await _db, event.toMap());
+    //await _eventStore.add(await _db, event.toMap());
+    await _eventStore.record(event.id).put(await _db, event.toMap());
   }
 
   Future updateEvent(Event event) async {

@@ -1,36 +1,10 @@
 import 'package:flutter/material.dart';
 
-class VList extends StatefulWidget {
-  VList({@required this.context, @required this.list, @required this.onClick});
+class VList {
+  VList({@required this.list, @required this.onClick});
 
-  final BuildContext context;
   final Function(int index) onClick;
   final List<Widget> list;
-
-  @override
-  VListState createState() => VListState();
-}
-
-class VListState extends State<VList> {
-  @override
-  BuildContext context;
-  List<Widget> list;
-  Function(int index) onClick;
-
-  void refresh () {
-    setState(() {
-
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    context = widget.context;
-    list = widget.list;
-    onClick = widget.onClick;
-  }
 
 //  @override
 //  void didChangeDependencies() {
@@ -40,9 +14,7 @@ class VListState extends State<VList> {
 //    onClick = widget.onClick;
 //  }
 
-  @override
-  Widget build(BuildContext context) {
-    context = this.context;
+  Widget build() {
     return Expanded(
       flex: 8,
       child: ListView.builder(
@@ -56,8 +28,7 @@ class VListState extends State<VList> {
                 padding: EdgeInsets.all(4),
                 child: GestureDetector(
                   onTap: () {
-//                      print("list tap");
-//                      refresh();
+                    onClick(index);
                   },
                   child: list[index],
                 ),

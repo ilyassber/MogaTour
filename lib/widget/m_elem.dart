@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class MedElem {
   MedElem(
-      {@required this.context,
-      @required this.id,
+      {@required this.id,
       @required this.selected,
       @required this.title,
       @required this.image,
@@ -13,7 +12,6 @@ class MedElem {
       @required this.width,
       @required this.fontSize});
 
-  final BuildContext context;
   final int id;
   final int selected;
   final String title;

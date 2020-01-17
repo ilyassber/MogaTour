@@ -395,7 +395,6 @@ class CreateCircuitState extends State<CreateCircuit> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         canvasColor: Colors.white,
-        primarySwatch: Colors.black54,
       ),
       home: Scaffold(
         appBar: AppBar(

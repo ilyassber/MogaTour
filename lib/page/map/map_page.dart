@@ -20,9 +20,11 @@ import 'package:permission_handler/permission_handler.dart';
 class MapPage extends StatefulWidget {
   MapPage({
     @required this.circuit,
+    @required this.buildType,
   });
 
   final Circuit circuit;
+  final int buildType;
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -37,6 +39,7 @@ class _MapPageState extends State<MapPage> {
   List<Widget> list = [];
   XList xList;
   bool activateDispose = false;
+  int buildType = 0;
 
   // Permissions Params
 
@@ -93,7 +96,6 @@ class _MapPageState extends State<MapPage> {
       list.add(elemToWidget.siteSmallWidget(context, i, sites[i]));
     }
     xList = new XList(
-      context: context,
       list: list,
       onClick: siteLocation,
     );
@@ -404,6 +406,7 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     circuit = widget.circuit;
+    buildType = widget.buildType;
     if (circuit.sites != null) sites = circuit.sites;
     geoTools.initSitesGeoPos(sites);
     initBitMarkers();
@@ -426,7 +429,7 @@ class _MapPageState extends State<MapPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     activateDispose = false;
-    getUserLocation();
+    initBitMarkers();
   }
 
   @override
@@ -438,7 +441,22 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     initList(context);
+    if (buildType == 0) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          canvasColor: Colors.white,
+        ),
+        home: Scaffold(
+          body: bodyBuilder(context),
+        ),
+      );
+    } else {
+      return bodyBuilder(context);
+    }
+  }
 
+  Widget bodyBuilder(BuildContext context) {
     return new Container(
       child: Stack(
         children: <Widget>[
@@ -479,7 +497,7 @@ class _MapPageState extends State<MapPage> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: 130,
-                child: xList.build(context),
+                child: xList.build(),
               ),
             ),
           ),

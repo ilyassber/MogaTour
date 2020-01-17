@@ -9,21 +9,20 @@ import 'package:flutter/material.dart';
 
 class CircuitWidget {
   CircuitWidget({
-    @required this.context,
     @required this.settingsState,
     @required this.circuit,
+    @required this.f,
   });
 
-  final BuildContext context;
   final SettingsState settingsState;
   final Circuit circuit;
+  final Function f;
   List<Widget> sitesList = [];
 
   void initState() {
     if (circuit != null && circuit.sites != null) {
       for (int i = 0; i < circuit.sites.length; i++) {
         sitesList.add(new MedElem(
-                context: context,
                 id: circuit.sites[i].siteId,
                 selected: 1,
                 title: circuit.sites[i].siteTitle,
@@ -45,7 +44,7 @@ class CircuitWidget {
     }
   }
 
-  Widget build(BuildContext context) {
+  Widget build() {
     initState();
     return Column(
       children: <Widget>[
@@ -75,7 +74,29 @@ class CircuitWidget {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: Container(
+                child: Material(
+                  elevation: 5,
+                  borderRadius: BorderRadius.circular(15),
+                  shadowColor: Color(0xffffffff).withOpacity(0.5),
+                  color: Color(0xffffffff).withOpacity(0.7),
+                  child: InkWell(
+                    onTap: f,
+                    borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          fit: BoxFit.fitHeight,
+                          image: AssetImage('assets/icons/play_btn.png'),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                /*Container(
                   width: 30,
                   height: 30,
                   decoration: new BoxDecoration(
@@ -84,7 +105,7 @@ class CircuitWidget {
                       image: AssetImage('assets/icons/play_btn.png'),
                     ),
                   ),
-                ),
+                )*/,
               ),
             ],
           ),
@@ -97,10 +118,9 @@ class CircuitWidget {
               child: Container(
                 height: 100,
                 child: XList(
-                  context: context,
                   list: sitesList,
                   onClick: null,
-                ).build(context),
+                ).build(),
               ),
             ),
           ),

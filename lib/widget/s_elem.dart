@@ -77,6 +77,7 @@ class SmallElem {
                                 child: Text(
                                   textTools.resizeText(title, 18),
                                   style: TextStyle(
+                                    fontFamily: 'Roboto',
                                       color: Colors.black54,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 9),

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:alpha_task/model/site.dart';
+import 'package:alpha_task/tools/TextTools.dart';
 import 'package:flutter/material.dart';
 
 class CircuitSite {
@@ -20,6 +23,8 @@ class CircuitSite {
   final List<Site> circuitSites;
   final double width;
   DecorationImage action_icon;
+
+  TextTools textTools = new TextTools();
 
   void initState() {
     if (site.selected == 0) {
@@ -52,37 +57,53 @@ class CircuitSite {
   String getTime(String openingTime, String closingTime) {
     if (openingTime == '00:00:00' && closingTime == '00:00:00')
       return '24h/24h';
-    else
+    else if (openingTime != null && closingTime != null)
       return '${openingTime.substring(0, 2)}h${openingTime.substring(3, 5)} - ${closingTime.substring(0, 2)}h${closingTime.substring(3, 5)}';
+    else
+      return 'Unavailable';
   }
 
   Text available(String openingTime, String closingTime) {
     int hour = new DateTime.now().hour;
-    if (openingTime == '00:00:00' && closingTime == '00:00:00')
+    if (openingTime != null && closingTime != null) {
+      if (openingTime == '00:00:00' && closingTime == '00:00:00')
+        return Text(
+          'Disponible',
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Colors.green,
+            fontSize: 10,
+          ),
+        );
+      else if (hour >= int.parse(openingTime.substring(0, 2)) &&
+          hour < int.parse(closingTime.substring(0, 2)))
+        return Text(
+          'Disponible',
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Colors.green,
+            fontSize: 10,
+          ),
+        );
+      else
+        return Text(
+          'Fermer',
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Colors.red,
+            fontSize: 10,
+          ),
+        );
+    } else {
       return Text(
-        'Disponible',
+        'Unavailable',
         style: TextStyle(
-          color: Colors.green,
-          fontSize: 10,
-        ),
-      );
-    else if (hour >= int.parse(openingTime.substring(0, 2)) &&
-        hour < int.parse(closingTime.substring(0, 2)))
-      return Text(
-        'Disponible',
-        style: TextStyle(
-          color: Colors.green,
-          fontSize: 10,
-        ),
-      );
-    else
-      return Text(
-        'Fermer',
-        style: TextStyle(
+          fontFamily: 'Roboto',
           color: Colors.red,
           fontSize: 10,
         ),
       );
+    }
   }
 
   String getPrice(int price) {
@@ -240,8 +261,7 @@ class CircuitSite {
                                       color: Colors.white,
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'assets/images/sites/site2.jpg'),
+                                        image: (site.images[0].localPath != null) ? FileImage(new File(site.images[0].localPath)) : NetworkImage(site.images[0].imgPath),
                                       ),
                                       borderRadius: new BorderRadius.only(
                                         topLeft: const Radius.circular(5.0),
@@ -275,8 +295,9 @@ class CircuitSite {
                                                 Text(
                                                   site.siteTitle == null
                                                       ? "site title"
-                                                      : site.siteTitle,
+                                                      : textTools.resizeText(site.siteTitle, 24),
                                                   style: TextStyle(
+                                                    fontFamily: 'Roboto',
                                                     color: Colors.black87,
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
