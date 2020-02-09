@@ -1,6 +1,7 @@
 import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/model/xstep.dart';
 import 'package:alpha_task/model/site.dart';
+import 'package:alpha_task/page/site/site_page.dart';
 import 'package:alpha_task/tools/geo_tools.dart';
 import 'package:alpha_task/tools/network_tools.dart';
 import 'package:alpha_task/widget/btn_widget.dart';
@@ -227,7 +228,7 @@ class _MapPageState extends State<MapPage> {
             step.endLocation.latitude.toString() +
             "," +
             step.endLocation.longitude.toString() +
-            "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
+            "&key=AIzaSyA15cF3Nan9RdiB7TLNZhsDOqylOhp7TRY")
         .then((dynamic res) {
       rr = res;
     });
@@ -367,6 +368,13 @@ class _MapPageState extends State<MapPage> {
         longitude: sites[i].lng,
       );
       _toLocation(position);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SitePage(
+          sites: sites,
+          site: sites[i],
+        )),
+      );
     });
   }
 
