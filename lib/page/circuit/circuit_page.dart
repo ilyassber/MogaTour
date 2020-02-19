@@ -65,32 +65,33 @@ class CircuitPageState extends State<CircuitPage> {
         //primarySwatch: MaterialColor(0, {0 : Colors.black54}),
       ),
       home: Scaffold(
-//        appBar: AppBar(
-//          iconTheme: IconThemeData(color: Colors.black),
-//          automaticallyImplyLeading: false,
-//          leading: IconButton(
-//            icon: Icon(
-//              Icons.arrow_back,
-//              color: colors_lib.appbarIconColor,
+        appBar: AppBar(
+          title: Text(
+            'Circuit - ${circuit.circuitName}',
+            style: TextStyle(color: Colors.black87),
+          ),
+          backgroundColor: Colors.white,
+//          shape: Border(
+//            bottom: BorderSide(
+//              color: Colors.grey.withOpacity(0.3),
+//              width: 1,
 //            ),
-//            onPressed: () => Navigator.pop(context, false),
 //          ),
-//          centerTitle: true,
-//          elevation: 0.0,
-//          title: Text(
-//            getAttr('aboutPageTitle'),
-//            style: colors_lib.appBarTextStyle,
-//          ),
-//          backgroundColor: colors_lib.appbarBGColor,
-//          brightness: Brightness.light,
-//        ),
-//        endDrawer: Theme(
-//          data: Theme.of(context).copyWith(
-//            canvasColor: Colors.white,
-//          ),
-//          child: getDrawerNew(context, _languageMap),
-//        ),
-//        backgroundColor: colors_lib.generalBGColor,
+          elevation: 3,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Align(
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.black87,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
         body: buildBody(context, height, width),
       ),
     );

@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:alpha_task/database/db_manager.dart';
 import 'package:alpha_task/database/image_db_manager.dart';
 import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/model/site.dart';
 import 'package:alpha_task/page/circuit/circuits_page.dart';
 import 'package:alpha_task/page/main_page.dart';
 import 'package:alpha_task/page/map/map_page.dart';
 import 'package:alpha_task/settings/settings_state.dart';
+import 'package:alpha_task/tools/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +24,7 @@ class HomePageState extends State<HomePage> {
   DbManager _dbManager = DbManager();
   ImageDbManager _imageDbManager = new ImageDbManager();
   List<Circuit> circuits = [];
+  List<Site> sites = [];
 
   // Global Params
 
@@ -36,6 +39,7 @@ class HomePageState extends State<HomePage> {
   // Constructors
 
   SettingsState state;
+  Filter filter = new Filter();
 
   // Pages
 
@@ -46,8 +50,9 @@ class HomePageState extends State<HomePage> {
   void initEnv(BuildContext context) async {
     state = new SettingsState();
     prefs = await SharedPreferences.getInstance();
+    sites.addAll(await _dbManager.getAllSites());
     circuits.addAll(await _dbManager.getAllCircuits());
-    loadImages(circuits);
+    await loadImages();
     print('image path : ${circuits[0].sites[0].images[0].localPath}');
     state.language = prefs.get('language');
     state.languageMap = json.decode(prefs.get(state.language));
@@ -108,40 +113,45 @@ class HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void loadImages(List<Circuit> circuits) async {
-    int sum = 0;
+  Future loadImages() async {
+    //int sum = 0;
+    await _imageDbManager.loadSitesImages(sites, callBack);
     for (int i = 0; i < circuits.length; i++) {
-      sum = sum + await _imageDbManager.loadSitesImages(circuits[i], callBack);
+      //sum = sum + await _imageDbManager.loadSitesImages([i], callBack);
+      List<Site> newList = filter.updateSitesList(sites, circuits[i].sites);
+      circuits[i].sites.clear();
+      circuits[i].sites.addAll(newList);
+      await _dbManager.updateCircuit(circuits[i]);
     }
-    if (sum > 0) {
-      List<Circuit> newCircuits = await _dbManager.getAllCircuits();
-      circuits.clear();
-      circuits.addAll(newCircuits);
-      print(circuits[0].sites[0].images[0].toMap());
-      homePage = MainPage(
-        state: state,
-      );
-      circuitsPage = CircuitsPage(
-        context: context,
-        settingsState: state,
-        circuits: circuits,
-      ).build();
-      mapPage = MapPage(
-        circuit: (circuits != null)
-            ? (circuits.length > 0) ? circuits[0] : null
-            : null,
-        buildType: 1,
-      );
-      _children.clear();
-      _children.addAll([
-        mapPage,
-        circuitsPage,
-        homePage,
-        Container(),
-        Container(),
-      ]);
-      callBack();
-    }
+//    if (sum > 0) {
+//      List<Circuit> newCircuits = await _dbManager.getAllCircuits();
+//      circuits.clear();
+//      circuits.addAll(newCircuits);
+//      print(circuits[0].sites[0].images[0].toMap());
+//      homePage = MainPage(
+//        state: state,
+//      );
+//      circuitsPage = CircuitsPage(
+//        context: context,
+//        settingsState: state,
+//        circuits: circuits,
+//      ).build();
+//      mapPage = MapPage(
+//        circuit: (circuits != null)
+//            ? (circuits.length > 0) ? circuits[0] : null
+//            : null,
+//        buildType: 1,
+//      );
+//      _children.clear();
+//      _children.addAll([
+//        mapPage,
+//        circuitsPage,
+//        homePage,
+//        Container(),
+//        Container(),
+//      ]);
+//      callBack();
+//    }
   }
 
   @override
@@ -170,6 +180,7 @@ class HomePageState extends State<HomePage> {
         : Scaffold(
             extendBodyBehindAppBar:
                 (_currentIndex == 2 || _currentIndex == 0) ? true : false,
+            //backgroundColor: Color(0xfff0f0f0),
 //            appBar: AppBar(
 //              title: Align(
 //                alignment: Alignment.center,

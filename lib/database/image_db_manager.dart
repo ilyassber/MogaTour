@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:alpha_task/database/db_manager.dart';
 import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/model/site.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,19 +63,19 @@ class ImageDbManager {
   }
 
   //ToDo: load sites list images
-  Future<int> loadSitesImages(Circuit circuit, Function callBack) async {
+  Future<int> loadSitesImages(List<Site> sites, Function callBack) async {
     DbManager dbManager = new DbManager();
     int sum = 0;
 
-    for (int i = 0; i < circuit.sites.length; i++) {
-      for (int j = 0; j < circuit.sites[i].images.length; j++) {
-        if (circuit.sites[i].images[j].localPath == null) {
-          await loadImage(circuit.sites[i].images[j].imgPath).then((onValue) async {
+    for (int i = 0; i < sites.length; i++) {
+      for (int j = 0; j < sites[i].images.length; j++) {
+        if (sites[i].images[j].localPath == null) {
+          await loadImage(sites[i].images[j].imgPath).then((onValue) async {
             if (onValue != null) {
               if (await onValue.exists()) {
                 print("${onValue.path} --- ${onValue.readAsBytesSync().length}");
-                if (circuit.sites[i].images[j].localPath != onValue.path) {
-                  circuit.sites[i].images[j].localPath = onValue.path;
+                if (sites[i].images[j].localPath != onValue.path) {
+                  sites[i].images[j].localPath = onValue.path;
                   sum++;
                 }
               }
@@ -84,8 +85,9 @@ class ImageDbManager {
         }
         //Function.apply(callBack, null);
       }
+      await dbManager.updateSite(sites[i]);
+      print(sites[i].images[0].toMap());
     }
-    await dbManager.updateCircuit(circuit);
     return sum;
   }
 }

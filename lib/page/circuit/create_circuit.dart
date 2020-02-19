@@ -14,9 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCircuit extends StatefulWidget {
-  CreateCircuit({@required this.settingsState});
+  CreateCircuit({@required this.settingsState, @required this.circuitName});
 
   final SettingsState settingsState;
+  final String circuitName;
 
   @override
   CreateCircuitState createState() => CreateCircuitState();
@@ -25,11 +26,11 @@ class CreateCircuit extends StatefulWidget {
 class CreateCircuitState extends State<CreateCircuit> {
   SettingsState settingsState;
   int count = 0;
-  String circuit = 'Mon Circuit';
+  String circuitName;
   TextEditingController textController = new TextEditingController();
   ElemToWidget elemToWidget;
   Filter filter;
-  DbManager _dbManager;
+  DbManager _dbManager = DbManager();
   double width;
   @override
   BuildContext context;
@@ -78,6 +79,7 @@ class CreateCircuitState extends State<CreateCircuit> {
   void initCategories(int id, int access) {
     int i = 0;
     int index = -1;
+    //siteList.forEach((x) => {x.linked = 0});
     if (categoryList.length > 0) {
       while (i < categoryList.length) {
         if (categoryList[i].categoryId == id) index = i;
@@ -93,6 +95,7 @@ class CreateCircuitState extends State<CreateCircuit> {
       if (visibleList.length == 0) visibleList.addAll(siteList);
     } else
       visibleList.addAll(siteList);
+    print(visibleList[0].images[0].toMap());
   }
 
   void categoryCallback(int id, int access) {
@@ -113,6 +116,33 @@ class CreateCircuitState extends State<CreateCircuit> {
       }
       sitesVListWidget(context);
     });
+  }
+
+  void onCreateCircuit() async {
+    List<Circuit> cir = await _dbManager.getAllCircuits();
+    int id = 0;
+    for (int i = 0; i < cir.length; i++) {
+      if (cir[i].circuitId >= id) id = cir[i].circuitId;
+    }
+    id++;
+    for (int i = 0; i < circuitSites.length; i++) {
+      circuitSites[i].selected = 1;
+    }
+    Circuit circuit = new Circuit(
+      circuitId: id,
+      circuitName: circuitName,
+      sites: circuitSites,
+      createdAt: new DateTime.now(),
+      updatedAt: new DateTime.now(),
+    );
+    await _dbManager.insertCircuit(circuit);
+    cir = await _dbManager.getAllCircuits();
+    print("Cir length : ${cir.length}");
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CircuitPage(
+              settingsState: settingsState,
+              circuit: circuit,
+            )));
   }
 
   void searchUpdate(String input) {
@@ -158,13 +188,13 @@ class CreateCircuitState extends State<CreateCircuit> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    circuitName = widget.circuitName;
+    settingsState = widget.settingsState;
     elemToWidget = new ElemToWidget(function: refresh);
     filter = new Filter();
-    _dbManager = DbManager();
     //   initData();
     _dataBloc.add(DataEvent.loadData);
     elemToWidget = new ElemToWidget(function: refresh);
-    settingsState = widget.settingsState;
   }
 
   Widget buildBody(BuildContext context) {
@@ -205,7 +235,7 @@ class CreateCircuitState extends State<CreateCircuit> {
                           alignment: Alignment.bottomLeft,
                           child: Container(
                             child: Text(
-                              '$circuit - (${circuitSites.length})',
+                              '$circuitName - (${circuitSites.length})',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
@@ -217,16 +247,7 @@ class CreateCircuitState extends State<CreateCircuit> {
                         ),
                         InkWell(
                           onTap: () {
-                            Circuit circuit = new Circuit(
-                                circuitName: "my circuit", sites: circuitSites);
-                            for (int i = 0; i < circuitSites.length; i++) {
-                              circuitSites[i].selected = 1;
-                            }
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CircuitPage(
-                                      settingsState: settingsState,
-                                      circuit: circuit,
-                                    )));
+                            onCreateCircuit();
                           },
                           child: Align(
                             alignment: Alignment.topRight,
@@ -398,8 +419,31 @@ class CreateCircuitState extends State<CreateCircuit> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          title: Text(
+            'Create Circuit',
+            style: TextStyle(color: Colors.black87),
+          ),
+          backgroundColor: Colors.white,
+//          shape: Border(
+//            bottom: BorderSide(
+//              color: Colors.grey.withOpacity(0.3),
+//              width: 1,
+//            ),
+//          ),
+          elevation: 3,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Align(
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.black87,
+                size: 25,
+              ),
+            ),
+          ),
         ),
 //        appBar: AppBar(
 //          iconTheme: IconThemeData(color: Colors.black),

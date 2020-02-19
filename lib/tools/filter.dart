@@ -1,4 +1,5 @@
 import 'package:alpha_task/model/category.dart';
+import 'package:alpha_task/model/circuit.dart';
 import 'package:alpha_task/model/site.dart';
 import 'dart:math';
 
@@ -57,5 +58,33 @@ class Filter {
       sitesList.removeAt(index);
     }
     return filteredList;
+  }
+
+  void updateCircuitsList(List<Circuit> circuits, List<Site> list) {
+    for (int i = 0; i < circuits.length; i++) {
+      List<Site> sites = [];
+      sites.addAll(circuits[i].sites);
+      circuits[i].sites.clear();
+      circuits[i].sites.addAll(updateSitesList(list, sites));
+    }
+  }
+
+  List<Site> updateSitesList(List<Site> list, List<Site> sites) {
+    List<Site> newList = [];
+    for (int i = 0; i < sites.length; i++) {
+      Site site = getSiteById(list, sites[i].siteId);
+      if (site != null)
+        newList.add(site);
+    }
+    return newList;
+  }
+
+  Site getSiteById(List<Site> list, int id) {
+    int i = 0;
+    while (i < list.length && list[i].siteId != id)
+      i++;
+    if (i < list.length)
+      return list[i];
+    return null;
   }
 }

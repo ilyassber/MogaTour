@@ -7,18 +7,20 @@ class NewCircuit {
       {@required this.context,
       @required this.settingsState,
       @required this.title,
-      @required this.option});
+      @required this.option,
+      @required this.function});
 
   final BuildContext context;
   final SettingsState settingsState;
   final String title;
   final String option;
+  final Function function;
 
   Widget build() {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+          padding: EdgeInsets.fromLTRB(12, 10, 10, 5),
           child: Stack(
             children: <Widget>[
               Align(
@@ -46,17 +48,11 @@ class NewCircuit {
         ),
         GestureDetector(
           onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateCircuit(
-                        settingsState: settingsState,
-                      )),
-            ),
+            function(),
           },
           child: Container(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(

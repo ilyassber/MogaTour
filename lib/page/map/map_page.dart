@@ -1,7 +1,10 @@
 import 'package:alpha_task/model/circuit.dart';
+import 'package:alpha_task/model/xcolor.dart';
 import 'package:alpha_task/model/xstep.dart';
 import 'package:alpha_task/model/site.dart';
 import 'package:alpha_task/page/site/site_page.dart';
+import 'package:alpha_task/tools/polyline_effect.dart';
+import 'package:alpha_task/tools/filter.dart';
 import 'package:alpha_task/tools/geo_tools.dart';
 import 'package:alpha_task/tools/network_tools.dart';
 import 'package:alpha_task/widget/btn_widget.dart';
@@ -37,6 +40,7 @@ class _MapPageState extends State<MapPage> {
   NetworkTools network = new NetworkTools();
   ElemToWidget elemToWidget = new ElemToWidget();
   GeoTools geoTools = new GeoTools();
+  Filter filter = new Filter();
   List<Widget> list = [];
   XList xList;
   bool activateDispose = false;
@@ -55,13 +59,13 @@ class _MapPageState extends State<MapPage> {
 
   final Set<Polyline> _polyline = {};
   MapType _currentMapType = MapType.normal;
-  List<LatLng> latlng = [];
+  List<LatLng> latLng = [];
   GoogleMapController mapController;
   LatLng _centre;
   Position currentLocation;
   FutureOr<GoogleMapController> get controller => null;
   String _mapStyle;
-  double _zoom = 15;
+  double _zoom = 16;
 
   // Markers Params
 
@@ -169,95 +173,58 @@ class _MapPageState extends State<MapPage> {
     updateUserLocation();
   }
 
-//  void initMarkers() {
-//    setState(() {
-//      addMarkers(sites);
-//    });
-//  }
+  //Todo: Get Direction Functions
 
-  Future<List<XStep>> scanRoad(List<XStep> steps) {
-    int i = 0;
-    int pass = 1;
-    List<XStep> newRoad;
-    while (i < steps.length) {
-      if (pass == 1) {
-        pass = 0;
-        getDirectionSteps(steps[i]).then((value) {
-          newRoad.addAll(value);
-          pass = 1;
-          i++;
-        });
-      }
-    }
-    return Future.delayed(Duration(milliseconds: 100), () => newRoad);
-  }
+  // Road Scan
 
-  Future<List<XStep>> loopRoadScan(
-      List<XStep> steps, List<XStep> result, int length, int i) async {
-    while (i < length) {
+  Future<List<XStep>> loopRoadScan(LatLng start, LatLng end) async {
+    List<XStep> result = [];
+    try {
       await network
           .get("origin=" +
-              steps[i].startLocation.latitude.toString() +
+              start.latitude.toString() +
               "," +
-              steps[i].startLocation.longitude.toString() +
+              start.longitude.toString() +
               "&destination=" +
-              steps[i].endLocation.latitude.toString() +
+              end.latitude.toString() +
               "," +
-              steps[i].endLocation.longitude.toString() +
-              "&key=AIzaSyB940mpfv4pNgFIHTLI2v0nEXcAiQaYMjE")
+              end.longitude.toString() +
+              "&key=AIzaSyA15cF3Nan9RdiB7TLNZhsDOqylOhp7TRY" +
+              "&mode=walking")
           .then((dynamic res) {
-        print(res.length.toString() + ' + ' + result.length.toString());
-        result.addAll(res);
-        print(result.length.toString());
-        i++;
-        //if (i < length) loopRoadScan(steps, result, length, i);
+        //print(res.length.toString() + ' + ' + result.length.toString());
+        if (res != null && res.length > 0) result.addAll(res);
+        //print(result.length.toString());
       });
+    } catch (e) {
+      print(e);
     }
-    print('result => ' + result.length.toString());
-    return Future.delayed(Duration(milliseconds: 0), () => result);
+    //print('result => ' + result.length.toString());
+    return Future.delayed(Duration(milliseconds: 1000), () => result);
   }
 
-  Future<List<XStep>> getDirectionSteps(XStep step) {
-    List<XStep> rr;
-    network
-        .get("origin=" +
-            step.startLocation.latitude.toString() +
-            "," +
-            step.startLocation.longitude.toString() +
-            "&destination=" +
-            step.endLocation.latitude.toString() +
-            "," +
-            step.endLocation.longitude.toString() +
-            "&key=AIzaSyA15cF3Nan9RdiB7TLNZhsDOqylOhp7TRY")
-        .then((dynamic res) {
-      rr = res;
-    });
-    return Future.delayed(Duration(milliseconds: 100), () => rr);
-  }
-
-  void getRoad(LatLng start, LatLng end, int deptScan) {
-    XStep step = new XStep(startLocation: start, endLocation: end);
-    List<XStep> startList = [step];
-    List<XStep> finalRoad = [];
-    loopRoadScan(startList, finalRoad, startList.length, 0).then((value) {
+  Future getRoad(LatLng start, LatLng end, Site site) async {
+    await loopRoadScan(start, end).then((value) {
       List<XStep> rr = value;
+      if (rr.length > 0) latLng.add(rr[0].startLocation);
       for (final i in rr) {
-        latlng.add(i.startLocation);
-        latlng.add(i.endLocation);
+        latLng.add(i.endLocation);
       }
+    });
+  }
 
-      if (!activateDispose) {
-        setState(() {
-          _polyline.add(Polyline(
-            polylineId: PolylineId("12"),
-            visible: true,
-            //latlng is List<LatLng>
-            points: latlng,
-            color: Colors.blue,
-            width: 5,
-          ));
-        });
-      }
+  void getCircuit(List<Site> sites) async {
+    for (int i = 0; i < sites.length - 1; i++) {
+      await getRoad(new LatLng(sites[i].lat, sites[i].lng),
+          new LatLng(sites[i + 1].lat, sites[i + 1].lng), sites[i]);
+    }
+    setState(() {
+      PolylineEffect polylineEffect = new PolylineEffect(
+        startColor: new XColor(r: 47, g: 89, b: 131),
+        endColor: new XColor(r: 254, g: 204, b: 0),
+        list: latLng,
+      );
+      _polyline.addAll(polylineEffect.polylineList());
     });
   }
 
@@ -271,6 +238,12 @@ class _MapPageState extends State<MapPage> {
   void getUserLocation() async {
     _markers.clear();
     currentLocation = await locateUser();
+    if (buildType == 1 && circuit.sites != null) {
+      sites.clear();
+      sites.addAll(filter.filterByDistance(circuit.sites, null,
+          currentLocation.latitude, currentLocation.longitude));
+      sites.forEach((e) => e.visited = 0);
+    }
     if (!activateDispose) {
       setState(() {
         _centre = LatLng(currentLocation.latitude ?? 53.467125,
@@ -284,6 +257,18 @@ class _MapPageState extends State<MapPage> {
   void updateUserLocation() async {
     while (true) {
       currentLocation = await locateUser();
+      if (buildType == 0) {
+        int distance = geoTools
+            .getDistance(
+                new LatLng(currentLocation.latitude, currentLocation.longitude),
+                new LatLng(sites[circuit.currentSite].lat,
+                    sites[circuit.currentSite].lng))
+            .toInt();
+        if (distance < 15 && sites[circuit.currentSite].visited == 0) {
+          sites[circuit.currentSite].visited = 1;
+          if (circuit.currentSite < sites.length - 1) circuit.currentSite++;
+        }
+      }
       if (!activateDispose) {
         setState(() {
           _markers.remove(userPos);
@@ -362,7 +347,7 @@ class _MapPageState extends State<MapPage> {
 
   void siteLocation(int i) {
     setState(() {
-      sites[i].visited = 1;
+      //if (buildType == 0) sites[i].visited = 1;
       Position position = new Position(
         latitude: sites[i].lat,
         longitude: sites[i].lng,
@@ -370,10 +355,11 @@ class _MapPageState extends State<MapPage> {
       _toLocation(position);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SitePage(
-          sites: sites,
-          site: sites[i],
-        )),
+        MaterialPageRoute(
+            builder: (context) => SitePage(
+                  sites: (buildType == 1) ? sites : null,
+                  site: sites[i],
+                )),
       );
     });
   }
@@ -415,8 +401,9 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     circuit = widget.circuit;
     buildType = widget.buildType;
-    if (circuit.sites != null) sites = circuit.sites;
-    geoTools.initSitesGeoPos(sites);
+    geoTools.initSitesGeoPos(circuit.sites);
+    if (buildType == 0 && circuit != null) getCircuit(circuit.sites);
+    if (circuit.sites != null && buildType == 0) sites = circuit.sites;
     initBitMarkers();
     rootBundle.loadString('assets/map/map_style_silver').then((string) {
       if (!activateDispose) {
@@ -456,6 +443,28 @@ class _MapPageState extends State<MapPage> {
           canvasColor: Colors.white,
         ),
         home: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            title: Text(
+              'Map - ${circuit.circuitName}',
+              style: TextStyle(color: Colors.black87),
+            ),
+            backgroundColor: Colors.white.withOpacity(0.7),
+            elevation: 3,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black87,
+                  size: 25,
+                ),
+              ),
+            ),
+          ),
           body: bodyBuilder(context),
         ),
       );
@@ -481,8 +490,11 @@ class _MapPageState extends State<MapPage> {
                   },
                   initialCameraPosition: // required parameter that sets the starting camera position. Camera position describes which part of the world you want the map to point at.
                       CameraPosition(
-                          target: LatLng(currentLocation.latitude,
-                              currentLocation.longitude),
+                          target: (buildType == 0)
+                              ? LatLng(sites[circuit.currentSite].lat,
+                                  sites[circuit.currentSite].lng)
+                              : LatLng(currentLocation.latitude,
+                                  currentLocation.longitude),
                           zoom: _zoom,
                           tilt: 0.0),
                   markers: _markers,
@@ -512,7 +524,7 @@ class _MapPageState extends State<MapPage> {
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 60, 5, 0),
+              padding: EdgeInsets.fromLTRB(0, 100, 5, 0),
               child: BtnWidget(
                       size: 25,
                       height: 40,

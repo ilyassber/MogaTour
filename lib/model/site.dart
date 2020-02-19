@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:alpha_task/model/category.dart';
 import 'package:alpha_task/model/picture.dart';
+import 'package:alpha_task/model/xstep.dart';
 
 class Site {
   Map<String, dynamic> map;
@@ -41,6 +42,7 @@ class Site {
   double lng;
   Uint8List bitFlag;
   //List<dynamic> videos;
+  List<XStep> stepsToNext;
 
   Site({
     this.map,
@@ -88,6 +90,7 @@ class Site {
       'updated_at': updatedAt.toIso8601String(),
       'num_tel': phoneNumber,
       'gps_location': gpsLocation,
+      'linked': linked,
       'images': images.map((x) => x.toMap()).toList(),
       'categories': categories.map((x) => x.toMap()).toList(),
     };
@@ -131,6 +134,7 @@ class Site {
       prix: map["prix"],
       nbrClicks: map["nbr_clicks"],
       nbrVisitsGps: map["nbr_visits_gps"],
+      linked: (map["linked"] == null) ? 0 : map["linked"],
       images: images,
       categories: categories,
       // videos: List<dynamic>.from(json["videos"].map((x) => x)),

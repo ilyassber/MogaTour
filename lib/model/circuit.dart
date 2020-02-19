@@ -19,6 +19,7 @@ class Circuit {
   List<Site> sites;
   int key;
   Map<String, dynamic> map;
+  int currentSite = 0;
 
   Circuit(
       {this.circuitId,
@@ -46,9 +47,9 @@ class Circuit {
       'nbr_clicks': nbrClicks,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'images': images.map((x) => x.toMap()).toList(),
-      'categories': categories.map((x) => x.toMap()).toList(),
-      'sites': sites.map((x) => x.toMap()).toList(),
+      'images': (images != null) ? images.map((x) => x.toMap()).toList() : null,
+      'categories': (categories != null) ? categories.map((x) => x.toMap()).toList() : null,
+      'sites': (sites != null) ? sites.map((x) => x.toMap()).toList() : null,
     };
   }
 
@@ -70,14 +71,14 @@ class Circuit {
         nbrClicks: map['nbr_clicks'],
         createdAt: DateTime.parse(map['created_at']),
         updatedAt: DateTime.parse(map["updated_at"]),
-        images: (map['images'] != '[]')
+        images: (map['images'] != '[]' && map['images'] != null)
             ? List<Picture>.from(map['images'].map((x) => Picture.fromMap(x)))
             : [],
-        categories: (map['categories'] != '[]')
+        categories: (map['categories'] != '[]' && map['categories'] != null)
             ? List<Category>.from(
                 map['categories'].map((x) => Category.fromMap(x)))
             : [],
-        sites: (map['sites'] != '[]') ? sites : [],
+        sites: (map['sites'] != '[]' && map['sites'] != null) ? sites : [],
         map: map);
     //print("<><><><><><><><><><>--${json.decode(map['sites'])}--<><><><><><><><><><>");
     return circuit;

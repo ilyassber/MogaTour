@@ -36,9 +36,9 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     var categoryUrl = "http://165.227.192.11/api/1/categories/sites";
     var circuitUrl = "http://165.227.192.11/api/1/circuits/all";
 
-    await _dbManager.deleteAllCircuit();
-    await _dbManager.deleteAllCategory();
-    await _dbManager.deleteAllSite();
+//    await _dbManager.deleteAllCircuit();
+//    await _dbManager.deleteAllCategory();
+//    await _dbManager.deleteAllSite();
 
     List<Site> sites = await _dbManager.getAllSites();
     List<Category> categories = await _dbManager.getAllCategories();

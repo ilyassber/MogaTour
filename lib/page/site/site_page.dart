@@ -106,9 +106,11 @@ class SitePageState extends State<SitePage> {
                               move = index - 5;
                             else
                               move++;
-                            scrollController.animateTo(12 * move.toDouble(),
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.linear);
+                            scrollController.animateTo(
+                              10 * move.toDouble(),
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.linear,
+                            );
                           } else if (alpha < 0 &&
                               move > 0 &&
                               index < move + 1) {
@@ -116,7 +118,7 @@ class SitePageState extends State<SitePage> {
                               move = 0;
                             else
                               move--;
-                            scrollController.animateTo(12 * move.toDouble(),
+                            scrollController.animateTo(10 * move.toDouble(),
                                 duration: Duration(milliseconds: 300),
                                 curve: Curves.linear);
                           }
@@ -124,34 +126,73 @@ class SitePageState extends State<SitePage> {
                       },
                       initialPage: index,
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: IgnorePointer(
-                        ignoring: true,
-                        child: Container(
-                          height: 28,
-                          width: (site.images.length < 7)
-                              ? (10 * site.images.length)
-                              : 72,
-                          child: ListView.builder(
-                            controller: scrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: site.images.length,
-                            itemBuilder: (context, i) {
-                              return Container(
-                                width: 8.0,
-                                height: 8.0,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 2.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: site.images[i].imgId ==
-                                            site.images[index].imgId
-                                        ? Color.fromRGBO(255, 255, 255, 0.9)
-                                        : Color.fromRGBO(255, 255, 255, 0.4)),
-                              );
-                            },
+                  ],
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: width,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      width: width / 3 - 10,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Icon(
+                          Icons.favorite_border,
+                          size: 30,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: width / 3,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: Container(
+                            height: 28,
+                            width: (site.images.length < 7)
+                                ? (10 * site.images.length)
+                                : 60,
+                            child: ListView.builder(
+                              controller: scrollController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: site.images.length,
+                              itemBuilder: (context, i) {
+                                return Container(
+                                  width: 6.0,
+                                  height: 6.0,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 2.0),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: site.images[i].imgId ==
+                                              site.images[index].imgId
+                                          ? Color.fromRGBO(0, 0, 0, 0.7)
+                                          : Color.fromRGBO(0, 0, 0, 0.4)),
+                                );
+                              },
+                            ),
                           ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: width / 3 - 10,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Icon(
+                          Icons.directions,
+                          size: 30,
+                          color: Colors.grey,
                         ),
                       ),
                     ),
@@ -165,7 +206,7 @@ class SitePageState extends State<SitePage> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
                         child: Container(
                           width: width - 80,
                           child: Text(
@@ -355,15 +396,19 @@ class SitePageState extends State<SitePage> {
               Visibility(
                 visible: (sites != null) ? true : false,
                 child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 130,
-                    child: xList.build(),
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 130,
+                      child: xList.build(),
+                    ),
                   ),
                 ),
-              ),),
+              ),
+              Container(
+                height: (sites == null) ? 20 : 0,
+              ),
             ],
           ),
         ),
@@ -433,10 +478,11 @@ class SitePageState extends State<SitePage> {
   void callBack(int index) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SitePage(
-        sites: sites,
-        site: sortedList[index],
-      )),
+      MaterialPageRoute(
+          builder: (context) => SitePage(
+                sites: sites,
+                site: sortedList[index],
+              )),
     );
   }
 }
