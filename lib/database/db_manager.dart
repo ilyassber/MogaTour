@@ -53,11 +53,19 @@ class DbManager {
       await _db,
     );
 
-    return recordSnapshots.map((snapshot) {
+    List<Site> sites = recordSnapshots.map((snapshot) {
       final site = Site.fromMap(snapshot.value);
       site.key = snapshot.key;
       return site;
     }).toList();
+    for (int i = 0; i < sites.length; i++) {
+      sites[i].categories.add(new Category(
+        categoryId: -1,
+        categoryName: 'All',
+        image: 'assets/images/sites/site2.jpg',
+      ));
+    }
+    return sites;
   }
 
   Future deleteAllSite() async {

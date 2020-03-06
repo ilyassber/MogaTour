@@ -119,7 +119,7 @@ class CircuitsPage {
   Widget build() {
     initList(circuitsList);
     return Container(
-      margin: EdgeInsets.only(top: 0.0, left: 0.0, right: 0.0, bottom: 0.0),
+      margin: EdgeInsets.only(top: 10.0, left: 0.0, right: 0.0, bottom: 0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

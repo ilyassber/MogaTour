@@ -35,9 +35,9 @@ class Category {
     return Category(
       categoryId: json["category_id"],
       categoryName: json["title"],
-      nbrClicks: json["nbr_clicks"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
+      nbrClicks: (json["nbr_clicks"] != null) ? json["nbr_clicks"] : 0,
+      createdAt: (json["created_at"] != null) ? DateTime.parse(json["created_at"]) : null,
+      updatedAt: (json["updated_at"] != null) ? DateTime.parse(json["updated_at"]) : null,
       image: json["image"],
     );
   }

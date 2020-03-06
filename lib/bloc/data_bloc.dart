@@ -108,6 +108,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     } else
       print("Circuits data is already there : length = ${circuits.length}");
 
+    categories.add(new Category(
+      categoryId: -1,
+      categoryName: 'All',
+      image: 'assets/images/sites/site2.jpg',
+    ));
+
     yield AfterLoading(sites, categories, circuits);
   }
 

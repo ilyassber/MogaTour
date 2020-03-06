@@ -196,10 +196,9 @@ class HomePageState extends State<HomePage> {
 //              backgroundColor: Colors.white.withOpacity(0.1),
 //              elevation: 0,
 //            ),
-            body: (_currentIndex == 2)
+            body: (_currentIndex == 2 || _currentIndex == 0)
                 ? _children[_currentIndex]
-                : Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                : SafeArea(
                     child: _children[_currentIndex],
                   ),
             bottomNavigationBar: BottomNavigationBar(
