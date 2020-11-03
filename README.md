@@ -1,6 +1,6 @@
-# alpha_task
+# MogaTour
 
-A new Flutter application.
+Tourism application for Esaaouira.
 
 ## Getting Started
 
